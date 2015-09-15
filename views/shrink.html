@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>smallest</title>
+  </head>
+  <body>
+  	<header>
+  		<center style="font-size:30px"> Growing letters </center>
+	</header>
+	<article>
+		<center><a href="third">Get back, yo</a></center>
+		<center id="waka"> This Text </center> 
+		<script>
+			var waka = document.getElementById("waka");
+			var size = 12;
+			setInterval(function() {
+				var newSize = ~~(Math.random()*300 + 8);
+				waka.style.fontSize = newSize + "px";
+				if(newSize > size) {
+					waka.innerHTML = "This Text Grew";
+				}
+				else {
+					waka.innerHTML = "This Text Shrank";
+				}
+				size = newSize;
+			}, 333);
+		</script>
+  	</article>
+  </body>
+</html>
