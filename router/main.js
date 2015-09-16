@@ -19,6 +19,11 @@ module.exports=function(app)
 //        res.render('fifth');
 //    });
     app.get(/.*/, function(req, res) {
-        res.render(req.originalUrl.slice(1, req.originalUrl.length));
+        if (req.originalUrl && req.originalUrl.length > 0) {
+            res.render(req.originalUrl.slice(1, req.originalUrl.length));
+        }
+        else {
+            res.render(req.originalUrl);
+        }
     });
 }
