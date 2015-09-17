@@ -22,7 +22,8 @@ module.exports=function(app)
 //    });
     app.get(/.*\.js/, function(req, res) {
 //        res.send(fs.readFileSync("../scripts" + req.originalUrl, "utf8"));
-        res.send(fs.readFileSync(path._directory + "../scripts" + req.originalUrl));
+//        res.send(fs.readFileSync(path.resolve(__dirname, req.originalUrl));
+        res.send(fs.readFileSync(__dirname + "/../scripts" + req.originalUrl, "utf8"));
     });
     app.get(/.*/, function(req, res) {
         if (req.originalUrl && req.originalUrl.length > 0) {
