@@ -11,7 +11,7 @@ renderer.shadowMapType 		= THREE.PCFSoftShadowMap;
 var onRenderFcts= [];
 var scene	= new THREE.Scene();
 var camera	= new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.01, 1000);
-camera.position.z = 25;
+camera.position.z = 50;
 
 //////////////////////////////////////////////////////////////////////////////////
 //		Comment								//
@@ -34,7 +34,7 @@ onRenderFcts.push(function(){
     var angle	= Date.now()/1000 * Math.PI;
 // angle	= Math.PI*2
     spotLight.position.x	= Math.cos(angle*-0.1)*20;
-    spotLight.position.y	= 1 + Math.sin(angle*0.5)*6;
+    spotLight.position.y	= 15 + Math.sin(angle*0.5)*6;
     spotLight.position.z	= Math.sin(angle*-0.1)*20;		
 })
 //////////////////////////////////////////////////////////////////////////////////
@@ -55,9 +55,10 @@ torusKnot.position.y		= 4;
 scene.add( torusKnot );
 
 onRenderFcts.push(function(){
-     torusKnot.rotation.x	+= 0.005;
-     torusKnot.rotation.y	+= 0.03;
-     torusKnot.rotation.z	+= 0.02;		
+    var angle	= Date.now()/1000 * Math.PI;
+// angle	= Math.PI*2
+    torusKnot.position.x	= Math.cos(angle)*5;
+    torusKnot.position.z	= Math.sin(angle*-0.7)*5;			
 })
 
 
