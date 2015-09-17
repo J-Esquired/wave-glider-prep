@@ -7,3 +7,9 @@ for (dirpath, dirnames, filenames) in walk('./views'):
 print f
 for wat in f:
     print wat
+    if (".html" in wat):
+        print wat.find(".html")
+        filename = wat[0:wat.find(".html")] + ".jade"
+        file = open(filename, "w")
+        file.write("include " + wat)
+        file.close()
