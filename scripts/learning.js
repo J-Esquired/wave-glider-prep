@@ -34,7 +34,7 @@ onRenderFcts.push(function(){
     var angle	= Date.now()/1000 * Math.PI;
 // angle	= Math.PI*2
     spotLight.position.x	= Math.cos(angle*-0.1)*20;
-    spotLight.position.y	= 15 + Math.sin(angle*0.5)*6;
+    spotLight.position.y	= 1 + Math.sin(angle*0.5)*6;
     spotLight.position.z	= Math.sin(angle*-0.1)*20;		
 })
 //////////////////////////////////////////////////////////////////////////////////
