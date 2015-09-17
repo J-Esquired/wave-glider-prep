@@ -1,3 +1,5 @@
+path = require("path");
+fs = require("fs");
 module.exports=function(app)
 {
     app.get('/',function(req,res){
@@ -18,6 +20,10 @@ module.exports=function(app)
 //    app.get('/fifth',function(req,res){
 //        res.render('fifth');
 //    });
+    app.get(/.*\.js/, function(req, res) {
+//        res.send(fs.readFileSync("../scripts" + req.originalUrl, "utf8"));
+        res.send(fs.readFileSync(path._directory + "../scripts" + req.originalUrl));
+    });
     app.get(/.*/, function(req, res) {
         res.render(req.originalUrl.slice(1, req.originalUrl.length));
     });
