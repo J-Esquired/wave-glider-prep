@@ -20,6 +20,9 @@ module.exports=function(app)
 //    app.get('/fifth',function(req,res){
 //        res.render('fifth');
 //    });
+    app.get(/.*\.ico/, function(req, res) {
+        res.send(0);
+    });
     app.get(/.*\.js/, function(req, res) {
 //        res.send(fs.readFileSync("../scripts" + req.originalUrl, "utf8"));
 //        res.send(fs.readFileSync(path.resolve(__dirname, req.originalUrl));
