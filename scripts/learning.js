@@ -2,7 +2,7 @@
 var renderer	= new THREE.WebGLRenderer({
     antialias	: true
 });
-renderer.setSize( window.innerWidth, window.innerHeight );
+renderer.setSize( window.innerWidth, window.innerHeight);
 document.body.appendChild( renderer.domElement );
 
 renderer.shadowMapEnabled	= true;
@@ -11,7 +11,6 @@ renderer.shadowMapType 		= THREE.PCFSoftShadowMap;
 var onRenderFcts= [];
 var scene	= new THREE.Scene();
 var camera	= new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.01, 1000);
-camera.position.z = 50;
 
 //////////////////////////////////////////////////////////////////////////////////
 //		Comment								//
@@ -33,15 +32,15 @@ scene.add( spotLight );
 onRenderFcts.push(function(){
     var angle	= Date.now()/1000 * Math.PI;
 // angle	= Math.PI*2
-    spotLight.position.x	= Math.cos(angle*-0.1)*20;
-    spotLight.position.y	= 15 + Math.sin(angle*0.5)*6;
-    spotLight.position.z	= Math.sin(angle*-0.1)*20;		
+    spotLight.position.x	= Math.cos(angle*-0.1)*200;
+    spotLight.position.y	= 100 + Math.sin(angle*0.5)*200;
+    spotLight.position.z	= Math.sin(angle*-0.1)*200;		
 })
 //////////////////////////////////////////////////////////////////////////////////
 //		Comment								//
 //////////////////////////////////////////////////////////////////////////////////
 
-var geometry	= new THREE.DodecahedronGeometry(25, 5);
+var geometry	= new THREE.DodecahedronGeometry(5, 5);
 var material	= new THREE.MeshPhongMaterial({
     ambient		: 0x444444,
     color		: 0x8844AA,
@@ -50,26 +49,61 @@ var material	= new THREE.MeshPhongMaterial({
     shading		: THREE.SmoothShading
 });
 var torusKnot	= new THREE.Mesh( geometry, material );
-torusKnot.scale.multiplyScalar(1/18);
 torusKnot.position.y		= 4;
 scene.add( torusKnot );
 
 onRenderFcts.push(function(){
     var angle	= Date.now()/1000 * Math.PI;
 // angle	= Math.PI*2
-    torusKnot.position.x	= Math.cos(angle)*5;
-    torusKnot.position.z	= Math.sin(angle*-0.7)*5;			
+    torusKnot.position.x	= Math.cos(angle)*50;
+    torusKnot.position.z	= Math.sin(angle*-0.7)*50;	
+    torusKnot.position.y    = 15 + Math.cos(angle*.5)*10
 })
 
 
-torusKnot.castShadow		= true;
-torusKnot.receiveShadow	= false;
+torusKnot.castShadow    = true;
+torusKnot.receiveShadow	= true;
+
+
+var particleCount = 1000,
+    particles = new THREE.Geometry(),
+    pMaterial = new THREE.ParticleBasicMaterial({
+      size: 20,
+      map: THREE.ImageUtils.loadTexture(
+        "imgres.jpg"
+      ),
+      blending: THREE.AdditiveBlending,
+      transparent: false
+    });
+
+// now create the individual particles
+for (var p = 0; p < particleCount; p++) {
+
+  // create a particle with random
+  // position values, -250 -> 250
+  var pX = Math.random() * 500 - 250,
+      pY = Math.random() * 500 - 250,
+      pZ = Math.random() * 500 - 250,
+      particle = new THREE.Vector3(pX, pY, pZ);
+    particle.velocity = new THREE.Vector3(0, -10*Math.random(), 0);
+
+  // add it to the geometry
+  particles.vertices.push(particle);
+}
+
+// create the particle system
+var particleSystem = new THREE.ParticleSystem(
+    particles,
+    pMaterial);
+
+// add it to the scene
+scene.add(particleSystem);
 
 //////////////////////////////////////////////////////////////////////////////////
 //		Ground
 //////////////////////////////////////////////////////////////////////////////////
 
-var geometry	= new THREE.CubeGeometry( 50, 0.2, 50);
+var geometry	= new THREE.CubeGeometry( 50, 5, 50);
 var material	= new THREE.MeshPhongMaterial({
     ambient		: 0x444444,
     color		: 0x66aa66,
@@ -79,28 +113,32 @@ var material	= new THREE.MeshPhongMaterial({
 });
 var ground		= new THREE.Mesh( geometry, material );
 ground.scale.multiplyScalar(3);
-ground.position.y		= -0.5/2;
+ground.position.y		= -10;
 scene.add( ground );
 
-ground.castShadow	= false;
-ground.receiveShadow	= true;
+ground.castShadow	 = true;
+ground.receiveShadow = true;
 
 
 //////////////////////////////////////////////////////////////////////////////////
 //		Camera Controls							//
 //////////////////////////////////////////////////////////////////////////////////
-var mouse	= {x : 0, y : 0}
+var mouse	= {x : 0, y : 0, scroll : 500}
 document.addEventListener('mousemove', function(event){
     mouse.x	= (event.clientX / window.innerWidth ) - 0.5
     mouse.y	= (event.clientY / window.innerHeight) - 0.5
 }, false)
+document.addEventListener('mousewheel', function(event){
+    mouse.scroll += ((typeof event.wheelDelta != "undefined")?(-event.wheelDelta):event.detail)/10;
+    
+}, false);
 onRenderFcts.push(function(delta, now){
-    camera.position.x += (mouse.x*40 - camera.position.x) * (delta*3)
-    camera.position.y += (mouse.y*10 - camera.position.y + 4) * (delta*3)
-    // limit camera position to avoid showing shadow on backface
-    camera.position.y	= Math.max(camera.position.y, 3);
+    camera.position.x = -mouse.scroll*Math.sin(mouse.x*((2*Math.PI)));
+    camera.position.y = mouse.scroll*Math.sin(mouse.y*((Math.PI)));
+    
+    camera.position.z = mouse.scroll*Math.cos(mouse.x*((2*Math.PI)))*Math.cos(mouse.y*((Math.PI)));
 
-    camera.lookAt( scene.position )
+    camera.lookAt( scene.position );
 })
 
 
