@@ -80,12 +80,11 @@ var prevPoint = 0;
 // now create the individual particles
 for (var p = 0; p < particleCount; p++) {
 
-    // create a particle with random
     // position values, -250 -> 250
     var pX = 5*(p%100) - 250,
-      pY = 5*Math.floor(p/100) - 250,
-      pZ = prevPoint + 10*Math.random()-5,
-      particle = new THREE.Vector3(pX, pY, pZ);
+        pY = 5*Math.floor(p/100) - 250,
+        pZ = 100*(Math.sin(pX*(Math.PI/250)))*(Math.sin(pY*(Math.PI/250))),
+        particle = new THREE.Vector3(pX, pY, pZ);
     particle.velocity = new THREE.Vector3(0, -10*Math.random(), 0);
 
     prevPoint = pZ;
