@@ -10,7 +10,7 @@ renderer.shadowMapType 		= THREE.PCFSoftShadowMap;
 
 var onRenderFcts= [];
 var scene	= new THREE.Scene();
-var camera	= new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.01, 1000);
+var camera	= new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.01, 5000);
 
 //////////////////////////////////////////////////////////////////////////////////
 //		Comment								//
@@ -65,30 +65,33 @@ torusKnot.castShadow    = true;
 torusKnot.receiveShadow	= true;
 
 
-var particleCount = 1000,
+var particleCount = 10000,
     particles = new THREE.Geometry(),
     pMaterial = new THREE.ParticleBasicMaterial({
-      size: 20,
+      size: 5,
       map: THREE.ImageUtils.loadTexture(
-        "imgres.jpg"
+        "images/LightingRing.jpg"
       ),
       blending: THREE.AdditiveBlending,
       transparent: false
     });
 
+var prevPoint = 0;
 // now create the individual particles
 for (var p = 0; p < particleCount; p++) {
 
-  // create a particle with random
-  // position values, -250 -> 250
-  var pX = Math.random() * 500 - 250,
-      pY = Math.random() * 500 - 250,
-      pZ = Math.random() * 500 - 250,
+    // create a particle with random
+    // position values, -250 -> 250
+    var pX = 5*(p%100) - 250,
+      pY = 5*Math.floor(p/100) - 250,
+      pZ = prevPoint + 10*Math.random()-5,
       particle = new THREE.Vector3(pX, pY, pZ);
     particle.velocity = new THREE.Vector3(0, -10*Math.random(), 0);
 
-  // add it to the geometry
-  particles.vertices.push(particle);
+    prevPoint = pZ;
+    
+    // add it to the geometry
+    particles.vertices.push(particle);
 }
 
 // create the particle system
