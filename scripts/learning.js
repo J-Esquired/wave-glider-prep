@@ -70,7 +70,7 @@ var particleCount = 10000,
     pMaterial = new THREE.ParticleBasicMaterial({
       size: 5,
       map: THREE.ImageUtils.loadTexture(
-        "images/LightingRing.jpg"
+        "images/particle.png"
       ),
       blending: THREE.AdditiveBlending,
       transparent: false
