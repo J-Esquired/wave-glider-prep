@@ -70,10 +70,10 @@ var arrayY = [0];
 for (var i = 0; i < 100; i++)
 {
     arrayX[i] = i*i/10000;
-    arrayY[i] = 250*Math.sin(i*Math.PI/10);
+    arrayY[i] = 25*Math.sin(i*Math.PI/10);
 }
 
-graph(arrayX, arrayY);
+graphFunction(arrayX);
 
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -147,7 +147,7 @@ function graph(array1, array2)
         
         var pX = 2*(p%array1.length) - array1.length,
             pY = 2*Math.floor(p/array1.length) - array2.length,
-            pZ = (array1[(pX + array1.length)/2])*(array2[(pY + array2.length)/2])/9,
+            pZ = (array1[(pX + array1.length)/2])*(array2[(pY + array2.length)/2]),
             particle = new THREE.Vector3(pX, pZ, pY);
 
         // add it to the geometry
@@ -186,10 +186,11 @@ function graphFunction(graphFunction)
     // now create the individual particles
     for (var p = 0; p < particleCount; p++) {
 
-        
-        var pX = 1,
-            pY = 1,
-            pZ = 1,
+        var phi = (Math.PI)*(p/particleCount),
+            theta = (2*Math.PI)*Math.random(),
+            pX = 150*Math.cos(theta)*Math.sin(phi),
+            pY = 150*Math.sin(theta)*Math.sin(phi),
+            pZ = 150*Math.cos(phi),
             particle = new THREE.Vector3(pX, pZ, pY);
 
         // add it to the geometry
