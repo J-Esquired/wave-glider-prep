@@ -37,7 +37,7 @@ onRenderFcts.push(function(){
     spotLight.position.z	= Math.sin(angle*-0.1)*200;		
 })
 //////////////////////////////////////////////////////////////////////////////////
-//		Comment								//
+//		stuff								//
 //////////////////////////////////////////////////////////////////////////////////
 
 var geometry	= new THREE.DodecahedronGeometry(5, 5);
@@ -64,62 +64,16 @@ onRenderFcts.push(function(){
 torusKnot.castShadow    = true;
 torusKnot.receiveShadow	= true;
 
+var arrayX = [0];
+var arrayY = [0];
 
-var particleCount = 10000,
-    particles = new THREE.Geometry(),
-    pMaterial = new THREE.ParticleBasicMaterial({
-      size: 5,
-      map: THREE.ImageUtils.loadTexture(
-        "images/particle.png"
-      ),
-      blending: THREE.AdditiveBlending,
-      transparent: false
-    });
-
-var prevPoint = 0;
-// now create the individual particles
-for (var p = 0; p < particleCount; p++) {
-
-    // position values, -250 -> 250
-    var pX = 5*(p%100) - 250,
-        pY = 5*Math.floor(p/100) - 250,
-        pZ = 100*(Math.sin(pX*(Math.PI/250)))*(Math.sin(pY*(Math.PI/250))),
-        particle = new THREE.Vector3(pX, pY, pZ);
-    particle.velocity = new THREE.Vector3(0, -10*Math.random(), 0);
-
-    prevPoint = pZ;
-    
-    // add it to the geometry
-    particles.vertices.push(particle);
+for (var i = 0; i < 100; i++)
+{
+    arrayX[i] = i*i/10000;
+    arrayY[i] = 250*Math.sin(i*Math.PI/10);
 }
 
-// create the particle system
-var particleSystem = new THREE.ParticleSystem(
-    particles,
-    pMaterial);
-
-// add it to the scene
-scene.add(particleSystem);
-
-//////////////////////////////////////////////////////////////////////////////////
-//		Ground
-//////////////////////////////////////////////////////////////////////////////////
-
-var geometry	= new THREE.CubeGeometry( 50, 5, 50);
-var material	= new THREE.MeshPhongMaterial({
-    ambient		: 0x444444,
-    color		: 0x66aa66,
-    shininess	: 150, 
-    specular	: 0x888888,
-    shading		: THREE.SmoothShading
-});
-var ground		= new THREE.Mesh( geometry, material );
-ground.scale.multiplyScalar(3);
-ground.position.y		= -10;
-scene.add( ground );
-
-ground.castShadow	 = true;
-ground.receiveShadow = true;
+graph(arrayX, arrayY);
 
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -167,3 +121,86 @@ requestAnimationFrame(function animate(nowMsec){
         onRenderFct(deltaMsec/1000, nowMsec/1000)
     })
 })
+
+
+//////////////////////////////////////////////////////////////////////////////////
+//		helper functions							//
+//////////////////////////////////////////////////////////////////////////////////
+
+function graph(array1, array2)
+{
+    
+    var particleCount = array1.length*array2.length,
+        particles = new THREE.Geometry(),
+        pMaterial = new THREE.ParticleBasicMaterial({
+          size: 5,
+          map: THREE.ImageUtils.loadTexture(
+            "images/particle.png"
+          ),
+          blending: THREE.AdditiveBlending,
+          transparent: false
+        });
+    
+    // now create the individual particles
+    for (var p = 0; p < particleCount; p++) {
+
+        
+        var pX = 2*(p%array1.length) - array1.length,
+            pY = 2*Math.floor(p/array1.length) - array2.length,
+            pZ = (array1[(pX + array1.length)/2])*(array2[(pY + array2.length)/2])/9,
+            particle = new THREE.Vector3(pX, pZ, pY);
+
+        // add it to the geometry
+        particles.vertices.push(particle);
+    }
+
+    // create the particle system
+    var particleSystem = new THREE.ParticleSystem(
+        particles,
+        pMaterial);
+
+    // add it to the scene
+    scene.add(particleSystem);
+
+    onRenderFcts.push(function(){
+        var angle	= Date.now()/10000 * Math.PI;
+        particleSystem.rotation.y	= angle;		
+    })
+
+}
+
+function graphFunction(graphFunction)
+{
+    
+    var particleCount = 10000,
+        particles = new THREE.Geometry(),
+        pMaterial = new THREE.ParticleBasicMaterial({
+          size: 5,
+          map: THREE.ImageUtils.loadTexture(
+            "images/particle.png"
+          ),
+          blending: THREE.AdditiveBlending,
+          transparent: false
+        });
+    
+    // now create the individual particles
+    for (var p = 0; p < particleCount; p++) {
+
+        
+        var pX = 1,
+            pY = 1,
+            pZ = 1,
+            particle = new THREE.Vector3(pX, pZ, pY);
+
+        // add it to the geometry
+        particles.vertices.push(particle);
+    }
+
+    // create the particle system
+    var particleSystem = new THREE.ParticleSystem(
+        particles,
+        pMaterial);
+
+    // add it to the scene
+    scene.add(particleSystem);
+}
