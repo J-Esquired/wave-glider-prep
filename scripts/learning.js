@@ -10,7 +10,7 @@ renderer.shadowMapType 		= THREE.PCFSoftShadowMap;
 
 var onRenderFcts= [];
 var scene	= new THREE.Scene();
-var camera	= new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.01, 5000);
+var camera	= new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.01, 6000);
 
 //////////////////////////////////////////////////////////////////////////////////
 //		Comment								//
@@ -33,7 +33,7 @@ onRenderFcts.push(function(){
     var angle	= Date.now()/1000 * Math.PI;
 // angle	= Math.PI*2
     spotLight.position.x	= Math.cos(angle*-0.1)*200;
-    spotLight.position.y	= 100 + Math.sin(angle*0.5)*200;
+    //spotLight.position.y	= 100 + Math.sin(angle*0.5)*200;
     spotLight.position.z	= Math.sin(angle*-0.1)*200;		
 })
 //////////////////////////////////////////////////////////////////////////////////
@@ -89,10 +89,17 @@ document.addEventListener('mousewheel', function(event){
     
 }, false);
 onRenderFcts.push(function(delta, now){
-    camera.position.x = -mouse.scroll*Math.sin(mouse.x*((2*Math.PI)));
-    camera.position.y = mouse.scroll*Math.sin(mouse.y*((Math.PI)));
+
+    var phi = Math.PI*(.5 + mouse.y),
+        theta = 2*Math.PI*(.5 + mouse.x),
+        pX = mouse.scroll*Math.cos(theta)*Math.sin(phi),
+        pY= mouse.scroll*Math.sin(theta)*Math.sin(phi),
+        pZ = mouse.scroll*Math.cos(phi);
+            
+    camera.position.x = pX;//-mouse.scroll*Math.cos(mouse.x*(2*Math.PI));
+    camera.position.y = pZ;//mouse.scroll*Math.cos(mouse.y*(Math.PI));
     
-    camera.position.z = mouse.scroll*Math.cos(mouse.x*((2*Math.PI)))*Math.cos(mouse.y*((Math.PI)));
+    camera.position.z = pY;//mouse.scroll*Math.cos(mouse.x*(2*Math.PI))*Math.cos(mouse.y*(Math.PI));
 
     camera.lookAt( scene.position );
 })
@@ -186,7 +193,7 @@ function graphFunction(graphFunction)
     // now create the individual particles
     for (var p = 0; p < particleCount; p++) {
 
-        var phi = (Math.PI)*(p/particleCount),
+        var phi = (Math.PI/2) + Math.asin((2*p/particleCount) - 1),
             theta = (2*Math.PI)*Math.random(),
             pX = 150*Math.cos(theta)*Math.sin(phi),
             pY = 150*Math.sin(theta)*Math.sin(phi),
