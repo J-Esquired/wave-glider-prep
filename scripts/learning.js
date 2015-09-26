@@ -10,7 +10,7 @@ renderer.shadowMapType 		= THREE.PCFSoftShadowMap;
 
 var onRenderFcts= [];
 var scene	= new THREE.Scene();
-var camera	= new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.01, 6000);
+var camera	= new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.01, 100000);
 
 //////////////////////////////////////////////////////////////////////////////////
 //		Comment								//
@@ -73,21 +73,22 @@ for (var i = 0; i < 100; i++)
     arrayY[i] = 25*Math.sin(i*Math.PI/10);
 }
 
-graphSphere(200, 0, 0, 0, false);
-graphSphere(25, 0, 500, 0, true);
-
+solarSystem();
 
 //////////////////////////////////////////////////////////////////////////////////
 //		Camera Controls							//
 //////////////////////////////////////////////////////////////////////////////////
-var mouse	= {x : 0, y : 0, scroll : 2000}
+var mouse	= {x : 0, y : 0, scroll : 10000}
 document.addEventListener('mousemove', function(event){
     mouse.x	= (event.clientX / window.innerWidth ) - 0.5
     mouse.y	= (event.clientY / window.innerHeight) - 0.5
 }, false)
 document.addEventListener('mousewheel', function(event){
-    mouse.scroll += ((typeof event.wheelDelta != "undefined")?(-event.wheelDelta):event.detail)/10;
-    
+    mouse.scroll += ((typeof event.wheelDelta != "undefined")?(-event.wheelDelta):event.detail)*(mouse.scroll/1000);
+    if (mouse.scroll < 0)
+    {
+        mouse.scroll = 0;
+    }
 }, false);
 onRenderFcts.push(function(delta, now){
 
@@ -219,5 +220,408 @@ function graphSphere(radius, x, y, z, orbitY)
         {
             particleSystem.rotation.y	= angle;
         }
+    })
+}
+
+
+//////////////////////////////////////////////////////////////////////////////////
+//		solar system							//
+//////////////////////////////////////////////////////////////////////////////////
+
+function solarSystem()
+{
+    sun();
+    mercury();
+    venus();
+    earth();
+    mars();
+    jupiter();
+    saturn();
+    uranus();
+    neptune();
+}
+
+function sun()
+{
+    var radius = 1500,
+        particleCount = 5*radius,
+        particles = new THREE.Geometry(),
+        pMaterial = new THREE.ParticleBasicMaterial({
+          size: 5,
+          map: THREE.ImageUtils.loadTexture(
+            "images/particle.png"
+          ),
+          blending: THREE.AdditiveBlending,
+          transparent: false
+        });
+    
+    // now create the individual particles
+    for (var p = 0; p < particleCount; p++) {
+
+        var phi = (Math.PI/2) + Math.asin((2*p/particleCount) - 1),
+            theta = (2*Math.PI)*Math.random(),
+            pX = radius*Math.cos(theta)*Math.sin(phi),
+            pY = radius*Math.sin(theta)*Math.sin(phi),
+            pZ = radius*Math.cos(phi),
+            particle = new THREE.Vector3(pX, pZ, pY);
+
+        // add it to the geometry
+        particles.vertices.push(particle);
+    }
+
+    // create the particle system
+    var particleSystem = new THREE.ParticleSystem(
+        particles,
+        pMaterial);
+
+    // add it to the scene
+    scene.add(particleSystem);
+    
+    onRenderFcts.push(function(){
+        var angle	= -1*Date.now()/10000 * Math.PI;
+    })
+}
+
+function mercury()
+{
+    var radius = 20,
+        particleCount = 5*radius,
+        particles = new THREE.Geometry(),
+        pMaterial = new THREE.ParticleBasicMaterial({
+          size: 5,
+          map: THREE.ImageUtils.loadTexture(
+            "images/particle.png"
+          ),
+          blending: THREE.AdditiveBlending,
+          transparent: false
+        });
+    
+    // now create the individual particles
+    for (var p = 0; p < particleCount; p++) {
+
+        var phi = (Math.PI/2) + Math.asin((2*p/particleCount) - 1),
+            theta = (2*Math.PI)*Math.random(),
+            pX = radius*Math.cos(theta)*Math.sin(phi),
+            pY = 2020 + radius*Math.sin(theta)*Math.sin(phi),
+            pZ = radius*Math.cos(phi),
+            particle = new THREE.Vector3(pX, pZ, pY);
+
+        // add it to the geometry
+        particles.vertices.push(particle);
+    }
+
+    // create the particle system
+    var particleSystem = new THREE.ParticleSystem(
+        particles,
+        pMaterial);
+
+    // add it to the scene
+    scene.add(particleSystem);
+    
+    onRenderFcts.push(function(){
+        var angle	= -1*Date.now()/20000 * Math.PI;
+        
+        particleSystem.rotation.y = 5*angle;
+    })
+}
+
+function venus()
+{
+    var radius = 25,
+        particleCount = 5*radius,
+        particles = new THREE.Geometry(),
+        pMaterial = new THREE.ParticleBasicMaterial({
+          size: 5,
+          map: THREE.ImageUtils.loadTexture(
+            "images/particle.png"
+          ),
+          blending: THREE.AdditiveBlending,
+          transparent: false
+        });
+    
+    // now create the individual particles
+    for (var p = 0; p < particleCount; p++) {
+
+        var phi = (Math.PI/2) + Math.asin((2*p/particleCount) - 1),
+            theta = (2*Math.PI)*Math.random(),
+            pX = radius*Math.cos(theta)*Math.sin(phi),
+            pY = 2300 + radius*Math.sin(theta)*Math.sin(phi),
+            pZ = radius*Math.cos(phi),
+            particle = new THREE.Vector3(pX, pZ, pY);
+
+        // add it to the geometry
+        particles.vertices.push(particle);
+    }
+
+    // create the particle system
+    var particleSystem = new THREE.ParticleSystem(
+        particles,
+        pMaterial);
+
+    // add it to the scene
+    scene.add(particleSystem);
+    
+    onRenderFcts.push(function(){
+        var angle	= -1*Date.now()/20000 * Math.PI;
+        
+        particleSystem.rotation.y = 1.4*angle;
+    })
+}
+
+function earth()
+{
+    var radius = 50,
+        particleCount = 5*radius,
+        particles = new THREE.Geometry(),
+        pMaterial = new THREE.ParticleBasicMaterial({
+          size: 5,
+          map: THREE.ImageUtils.loadTexture(
+            "images/particle.png"
+          ),
+          blending: THREE.AdditiveBlending,
+          transparent: false
+        });
+    
+    // now create the individual particles
+    for (var p = 0; p < particleCount; p++) {
+
+        var phi = (Math.PI/2) + Math.asin((2*p/particleCount) - 1),
+            theta = (2*Math.PI)*Math.random(),
+            pX = radius*Math.cos(theta)*Math.sin(phi),
+            pY = 2500 + radius*Math.sin(theta)*Math.sin(phi),
+            pZ = radius*Math.cos(phi),
+            particle = new THREE.Vector3(pX, pZ, pY);
+
+        // add it to the geometry
+        particles.vertices.push(particle);
+    }
+
+    // create the particle system
+    var particleSystem = new THREE.ParticleSystem(
+        particles,
+        pMaterial);
+
+    // add it to the scene
+    scene.add(particleSystem);
+    
+    onRenderFcts.push(function(){
+        var angle	= -1*Date.now()/20000 * Math.PI;
+        
+        particleSystem.rotation.y = angle;
+    })
+}
+
+function mars()
+{
+    var radius = 15,
+        particleCount = 5*radius,
+        particles = new THREE.Geometry(),
+        pMaterial = new THREE.ParticleBasicMaterial({
+          size: 5,
+          map: THREE.ImageUtils.loadTexture(
+            "images/particle.png"
+          ),
+          blending: THREE.AdditiveBlending,
+          transparent: false
+        });
+    
+    // now create the individual particles
+    for (var p = 0; p < particleCount; p++) {
+
+        var phi = (Math.PI/2) + Math.asin((2*p/particleCount) - 1),
+            theta = (2*Math.PI)*Math.random(),
+            pX = radius*Math.cos(theta)*Math.sin(phi),
+            pY = 2750 + radius*Math.sin(theta)*Math.sin(phi),
+            pZ = radius*Math.cos(phi),
+            particle = new THREE.Vector3(pX, pZ, pY);
+
+        // add it to the geometry
+        particles.vertices.push(particle);
+    }
+
+    // create the particle system
+    var particleSystem = new THREE.ParticleSystem(
+        particles,
+        pMaterial);
+
+    // add it to the scene
+    scene.add(particleSystem);
+    
+    onRenderFcts.push(function(){
+        var angle	= -1*Date.now()/20000 * Math.PI;
+        
+        particleSystem.rotation.y = .6*angle;
+    })
+}
+
+function jupiter()
+{
+    var radius = 200,
+        particleCount = 5*radius,
+        particles = new THREE.Geometry(),
+        pMaterial = new THREE.ParticleBasicMaterial({
+          size: 5,
+          map: THREE.ImageUtils.loadTexture(
+            "images/particle.png"
+          ),
+          blending: THREE.AdditiveBlending,
+          transparent: false
+        });
+    
+    // now create the individual particles
+    for (var p = 0; p < particleCount; p++) {
+
+        var phi = (Math.PI/2) + Math.asin((2*p/particleCount) - 1),
+            theta = (2*Math.PI)*Math.random(),
+            pX = radius*Math.cos(theta)*Math.sin(phi),
+            pY = 3800 + radius*Math.sin(theta)*Math.sin(phi),
+            pZ = radius*Math.cos(phi),
+            particle = new THREE.Vector3(pX, pZ, pY);
+
+        // add it to the geometry
+        particles.vertices.push(particle);
+    }
+
+    // create the particle system
+    var particleSystem = new THREE.ParticleSystem(
+        particles,
+        pMaterial);
+
+    // add it to the scene
+    scene.add(particleSystem);
+    
+    onRenderFcts.push(function(){
+        var angle	= -1*Date.now()/20000 * Math.PI;
+        
+        particleSystem.rotation.y = .08*angle;
+    })
+}
+
+function saturn()
+{
+    var radius = 175,
+        particleCount = 5*radius,
+        particles = new THREE.Geometry(),
+        pMaterial = new THREE.ParticleBasicMaterial({
+          size: 5,
+          map: THREE.ImageUtils.loadTexture(
+            "images/particle.png"
+          ),
+          blending: THREE.AdditiveBlending,
+          transparent: false
+        });
+    
+    // now create the individual particles
+    for (var p = 0; p < particleCount; p++) {
+
+        var phi = (Math.PI/2) + Math.asin((2*p/particleCount) - 1),
+            theta = (2*Math.PI)*Math.random(),
+            pX = radius*Math.cos(theta)*Math.sin(phi),
+            pY = 4500 + radius*Math.sin(theta)*Math.sin(phi),
+            pZ = radius*Math.cos(phi),
+            particle = new THREE.Vector3(pX, pZ, pY);
+
+        // add it to the geometry
+        particles.vertices.push(particle);
+    }
+
+    // create the particle system
+    var particleSystem = new THREE.ParticleSystem(
+        particles,
+        pMaterial);
+
+    // add it to the scene
+    scene.add(particleSystem);
+    
+    onRenderFcts.push(function(){
+        var angle	= -1*Date.now()/20000 * Math.PI;
+        
+        particleSystem.rotation.y = .03*angle;
+    })
+}
+
+function uranus()
+{
+    var radius = 100,
+        particleCount = 5*radius,
+        particles = new THREE.Geometry(),
+        pMaterial = new THREE.ParticleBasicMaterial({
+          size: 5,
+          map: THREE.ImageUtils.loadTexture(
+            "images/particle.png"
+          ),
+          blending: THREE.AdditiveBlending,
+          transparent: false
+        });
+    
+    // now create the individual particles
+    for (var p = 0; p < particleCount; p++) {
+
+        var phi = (Math.PI/2) + Math.asin((2*p/particleCount) - 1),
+            theta = (2*Math.PI)*Math.random(),
+            pX = radius*Math.cos(theta)*Math.sin(phi),
+            pY = 5000 + radius*Math.sin(theta)*Math.sin(phi),
+            pZ = radius*Math.cos(phi),
+            particle = new THREE.Vector3(pX, pZ, pY);
+
+        // add it to the geometry
+        particles.vertices.push(particle);
+    }
+
+    // create the particle system
+    var particleSystem = new THREE.ParticleSystem(
+        particles,
+        pMaterial);
+
+    // add it to the scene
+    scene.add(particleSystem);
+    
+    onRenderFcts.push(function(){
+        var angle	= -1*Date.now()/20000 * Math.PI;
+        
+        particleSystem.rotation.y = .015*angle;
+    })
+}
+
+function neptune()
+{
+    var radius = 75,
+        particleCount = 5*radius,
+        particles = new THREE.Geometry(),
+        pMaterial = new THREE.ParticleBasicMaterial({
+          size: 5,
+          map: THREE.ImageUtils.loadTexture(
+            "images/particle.png"
+          ),
+          blending: THREE.AdditiveBlending,
+          transparent: false
+        });
+    
+    // now create the individual particles
+    for (var p = 0; p < particleCount; p++) {
+
+        var phi = (Math.PI/2) + Math.asin((2*p/particleCount) - 1),
+            theta = (2*Math.PI)*Math.random(),
+            pX = radius*Math.cos(theta)*Math.sin(phi),
+            pY = 5400 + radius*Math.sin(theta)*Math.sin(phi),
+            pZ = radius*Math.cos(phi),
+            particle = new THREE.Vector3(pX, pZ, pY);
+
+        // add it to the geometry
+        particles.vertices.push(particle);
+    }
+
+    // create the particle system
+    var particleSystem = new THREE.ParticleSystem(
+        particles,
+        pMaterial);
+
+    // add it to the scene
+    scene.add(particleSystem);
+    
+    onRenderFcts.push(function(){
+        var angle	= -1*Date.now()/20000 * Math.PI;
+        
+        particleSystem.rotation.y = .008*angle;
     })
 }
