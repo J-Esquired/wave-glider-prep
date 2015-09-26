@@ -248,9 +248,7 @@ function sun()
         particles = new THREE.Geometry(),
         pMaterial = new THREE.ParticleBasicMaterial({
           size: 5,
-          map: THREE.ImageUtils.loadTexture(
-            "images/particle.png"
-          ),
+          color: 0xFFD633,
           blending: THREE.AdditiveBlending,
           transparent: false
         });
@@ -289,9 +287,7 @@ function mercury()
         particles = new THREE.Geometry(),
         pMaterial = new THREE.ParticleBasicMaterial({
           size: 5,
-          map: THREE.ImageUtils.loadTexture(
-            "images/particle.png"
-          ),
+          color: 0xFF6600,
           blending: THREE.AdditiveBlending,
           transparent: false
         });
@@ -332,9 +328,7 @@ function venus()
         particles = new THREE.Geometry(),
         pMaterial = new THREE.ParticleBasicMaterial({
           size: 5,
-          map: THREE.ImageUtils.loadTexture(
-            "images/particle.png"
-          ),
+          color: 0xFF9933,
           blending: THREE.AdditiveBlending,
           transparent: false
         });
@@ -375,9 +369,7 @@ function earth()
         particles = new THREE.Geometry(),
         pMaterial = new THREE.ParticleBasicMaterial({
           size: 5,
-          map: THREE.ImageUtils.loadTexture(
-            "images/particle.png"
-          ),
+          color: 0x0066FF,
           blending: THREE.AdditiveBlending,
           transparent: false
         });
@@ -418,9 +410,7 @@ function mars()
         particles = new THREE.Geometry(),
         pMaterial = new THREE.ParticleBasicMaterial({
           size: 5,
-          map: THREE.ImageUtils.loadTexture(
-            "images/particle.png"
-          ),
+          color: 0xFF4719,
           blending: THREE.AdditiveBlending,
           transparent: false
         });
@@ -461,9 +451,7 @@ function jupiter()
         particles = new THREE.Geometry(),
         pMaterial = new THREE.ParticleBasicMaterial({
           size: 5,
-          map: THREE.ImageUtils.loadTexture(
-            "images/particle.png"
-          ),
+          color: 0xB88C60,
           blending: THREE.AdditiveBlending,
           transparent: false
         });
@@ -504,9 +492,7 @@ function saturn()
         particles = new THREE.Geometry(),
         pMaterial = new THREE.ParticleBasicMaterial({
           size: 5,
-          map: THREE.ImageUtils.loadTexture(
-            "images/particle.png"
-          ),
+          color: 0xFFD633,
           blending: THREE.AdditiveBlending,
           transparent: false
         });
@@ -547,9 +533,7 @@ function uranus()
         particles = new THREE.Geometry(),
         pMaterial = new THREE.ParticleBasicMaterial({
           size: 5,
-          map: THREE.ImageUtils.loadTexture(
-            "images/particle.png"
-          ),
+          color: 0x0000CC,
           blending: THREE.AdditiveBlending,
           transparent: false
         });
@@ -590,9 +574,7 @@ function neptune()
         particles = new THREE.Geometry(),
         pMaterial = new THREE.ParticleBasicMaterial({
           size: 5,
-          map: THREE.ImageUtils.loadTexture(
-            "images/particle.png"
-          ),
+          color: 0x000099,
           blending: THREE.AdditiveBlending,
           transparent: false
         });
