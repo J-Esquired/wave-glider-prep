@@ -27,7 +27,7 @@ spotLight.shadowCameraVisible	= true;
 // console.dir(spotLight)
 // spotLight.shadowMapWidth	= 1024;
 // spotLight.shadowMapHeight	= 1024;
-scene.add( spotLight );	
+//scene.add( spotLight );	
 
 onRenderFcts.push(function(){
     var angle	= Date.now()/1000 * Math.PI;
@@ -50,7 +50,7 @@ var material	= new THREE.MeshPhongMaterial({
 });
 var torusKnot	= new THREE.Mesh( geometry, material );
 torusKnot.position.y		= 4;
-scene.add( torusKnot );
+//scene.add( torusKnot );
 
 onRenderFcts.push(function(){
     var angle	= Date.now()/1000 * Math.PI;
@@ -73,13 +73,14 @@ for (var i = 0; i < 100; i++)
     arrayY[i] = 25*Math.sin(i*Math.PI/10);
 }
 
-graphFunction(arrayX);
+graphSphere(200, 0, 0, 0, false);
+graphSphere(25, 0, 500, 0, true);
 
 
 //////////////////////////////////////////////////////////////////////////////////
 //		Camera Controls							//
 //////////////////////////////////////////////////////////////////////////////////
-var mouse	= {x : 0, y : 0, scroll : 500}
+var mouse	= {x : 0, y : 0, scroll : 2000}
 document.addEventListener('mousemove', function(event){
     mouse.x	= (event.clientX / window.innerWidth ) - 0.5
     mouse.y	= (event.clientY / window.innerHeight) - 0.5
@@ -176,10 +177,10 @@ function graph(array1, array2)
 
 }
 
-function graphFunction(graphFunction)
+function graphSphere(radius, x, y, z, orbitY)
 {
     
-    var particleCount = 10000,
+    var particleCount = 3000,
         particles = new THREE.Geometry(),
         pMaterial = new THREE.ParticleBasicMaterial({
           size: 5,
@@ -195,9 +196,9 @@ function graphFunction(graphFunction)
 
         var phi = (Math.PI/2) + Math.asin((2*p/particleCount) - 1),
             theta = (2*Math.PI)*Math.random(),
-            pX = 150*Math.cos(theta)*Math.sin(phi),
-            pY = 150*Math.sin(theta)*Math.sin(phi),
-            pZ = 150*Math.cos(phi),
+            pX = x + radius*Math.cos(theta)*Math.sin(phi),
+            pY = y + radius*Math.sin(theta)*Math.sin(phi),
+            pZ = z + radius*Math.cos(phi),
             particle = new THREE.Vector3(pX, pZ, pY);
 
         // add it to the geometry
@@ -211,4 +212,12 @@ function graphFunction(graphFunction)
 
     // add it to the scene
     scene.add(particleSystem);
+    
+    onRenderFcts.push(function(){
+        var angle	= -1*Date.now()/10000 * Math.PI;
+        if (orbitY)
+        {
+            particleSystem.rotation.y	= angle;
+        }
+    })
 }
