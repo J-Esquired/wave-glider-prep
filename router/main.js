@@ -28,7 +28,7 @@ module.exports=function(app)
 //        res.send(fs.readFileSync(path.resolve(__dirname, req.originalUrl));
         res.send(fs.readFileSync(__dirname + "/../scripts" + req.originalUrl, "utf8"));
     });
-    app.get(/.*\.(jpg|png)/, function(req, res) {
+    app.get(/.*\.(jpg|jpeg|png)/, function(req, res) {
 //        res.send(fs.readFileSync("../scripts" + req.originalUrl, "utf8"));
 //        res.send(fs.readFileSync(path.resolve(__dirname, req.originalUrl));
         res.send(fs.readFileSync(__dirname + "/.." + req.originalUrl));
