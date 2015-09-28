@@ -75,6 +75,13 @@ for (var i = 0; i < 100; i++)
 
 graphSphere(50, 50, 50, 50, false);
 
+function five(x, y)
+{
+    return x+y;
+}
+
+graphSphere(five);
+
 //////////////////////////////////////////////////////////////////////////////////
 //		Camera Controls							//
 //////////////////////////////////////////////////////////////////////////////////
@@ -175,13 +182,11 @@ function graph(array1, array2)
         var angle	= Date.now()/10000 * Math.PI;
         particleSystem.rotation.y	= angle;		
     })
-
 }
 
-function graphSphere(radius, x, y, z, orbitY)
+function graphSphere(thing)
 {
-    
-    var particleCount = 3000,
+    var particleCount = 10000,
         particles = new THREE.Geometry(),
         pMaterial = new THREE.ParticleBasicMaterial({
           size: 5,
@@ -195,11 +200,10 @@ function graphSphere(radius, x, y, z, orbitY)
     // now create the individual particles
     for (var p = 0; p < particleCount; p++) {
 
-        var phi = (Math.PI/2) + Math.asin((2*p/particleCount) - 1),
-            theta = (2*Math.PI)*Math.random(),
-            pX = x + radius*Math.cos(theta)*Math.sin(phi),
-            pY = y + radius*Math.sin(theta)*Math.sin(phi),
-            pZ = z + radius*Math.cos(phi),
+        
+        var pX = 10*Math.floor(p/100),
+            pY = 10*(p%100),
+            pZ = thing(pX, pY),
             particle = new THREE.Vector3(pX, pZ, pY);
 
         // add it to the geometry
@@ -213,12 +217,4 @@ function graphSphere(radius, x, y, z, orbitY)
 
     // add it to the scene
     scene.add(particleSystem);
-    
-    onRenderFcts.push(function(){
-        var angle	= -1*Date.now()/10000 * Math.PI;
-        if (orbitY)
-        {
-            particleSystem.rotation.y	= angle;
-        }
-    })
 }
