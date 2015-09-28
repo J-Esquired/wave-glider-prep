@@ -479,9 +479,11 @@ function jupiter()
     scene.add(particleSystem);
     
     onRenderFcts.push(function(){
-        var angle	= -1*Date.now()/20000 * Math.PI;
+        var angle	= -1*Date.now()/20000 * Math.PI + 500;
         
-        particleSystem.rotation.y = .08*angle;
+        particleSystem.position.z = 1000*Math.sin(5*angle);
+        particleSystem.rotation.x = .1*Math.sin(.08*angle);
+        particleSystem.rotation.y = 5*angle;
     })
 }
 
