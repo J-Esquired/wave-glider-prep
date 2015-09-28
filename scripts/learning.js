@@ -73,14 +73,11 @@ for (var i = 0; i < 100; i++)
     arrayY[i] = 25*Math.sin(i*Math.PI/10);
 }
 
-graphSphere(50, 50, 50, 50, false);
-
-function five(x, y)
-{
-    return x+y;
+function inputFunction1(num1, num2) {
+    return 200*()*Math.sin(num1/80)*Math.sin(num2/125);
 }
 
-graphSphere(five);
+graphFunction(inputFunction1);
 
 //////////////////////////////////////////////////////////////////////////////////
 //		Camera Controls							//
@@ -184,9 +181,9 @@ function graph(array1, array2)
     })
 }
 
-function graphSphere(thing)
+function graphFunction(inputFunction)
 {
-    var particleCount = 10000,
+    var particleCount = 40000,
         particles = new THREE.Geometry(),
         pMaterial = new THREE.ParticleBasicMaterial({
           size: 5,
@@ -201,9 +198,9 @@ function graphSphere(thing)
     for (var p = 0; p < particleCount; p++) {
 
         
-        var pX = 10*Math.floor(p/100),
-            pY = 10*(p%100),
-            pZ = thing(pX, pY),
+        var pX = 500 - 5*Math.floor(p/200),
+            pY = 500 - 5*(p%200),
+            pZ = inputFunction(pX,pY),
             particle = new THREE.Vector3(pX, pZ, pY);
 
         // add it to the geometry
