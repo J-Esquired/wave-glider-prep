@@ -33,6 +33,14 @@ module.exports=function(app)
 //        res.send(fs.readFileSync(path.resolve(__dirname, req.originalUrl));
         res.send(fs.readFileSync(__dirname + "/.." + req.originalUrl));
     });
+    app.get(/.*\.html/, function(req, res) {
+        if (req.originalUrl && req.originalUrl.length > 5) {
+            res.render(req.originalUrl.slice(1, -5));
+        }
+        else {
+            res.send("Please specify an .html file");
+        }
+    });
     app.get(/.*/, function(req, res) {
         if (req.originalUrl && req.originalUrl.length > 0) {
             res.render(req.originalUrl.slice(1, req.originalUrl.length));
