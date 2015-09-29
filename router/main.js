@@ -28,11 +28,6 @@ module.exports=function(app)
 //        res.send(fs.readFileSync(path.resolve(__dirname, req.originalUrl));
         res.send(fs.readFileSync(__dirname + "/../scripts" + req.originalUrl, "utf8"));
     });
-    app.get(/.*\.(jpg|jpeg|png|mp4|mkvs)/, function(req, res) {
-//        res.send(fs.readFileSync("../scripts" + req.originalUrl, "utf8"));
-//        res.send(fs.readFileSync(path.resolve(__dirname, req.originalUrl));
-        res.send(fs.readFileSync(__dirname + "/.." + req.originalUrl));
-    });
     app.get(/.*\.html/, function(req, res) {
         if (req.originalUrl && req.originalUrl.length > 5) {
             res.render(req.originalUrl.slice(1, -5));
@@ -40,6 +35,10 @@ module.exports=function(app)
         else {
             res.send("Please specify an .html file");
         }
+    });
+//    app.get(/.*\.(jpg|jpeg|png|mp4|mkvs)/, function(req, res) {
+    app.get(/.*\./, function(req, res) {
+        res.send(fs.readFileSync(__dirname + "/.." + req.originalUrl));
     });
     app.get(/.*/, function(req, res) {
         if (req.originalUrl && req.originalUrl.length > 0) {
