@@ -1,4 +1,3 @@
-
 var renderer	= new THREE.WebGLRenderer({
     antialias	: true
 });
@@ -74,10 +73,11 @@ for (var i = 0; i < 100; i++)
 }
 
 function inputFunction1(num1, num2) {
-    return 200*()*Math.sin(num1/80)*Math.sin(num2/125);
+    return 200*(1)*Math.sin(num1/80)*Math.sin(num2/125);
 }
 
-graphFunction(inputFunction1);
+//graphFunction(inputFunction1);
+graphFunction2("x**2 + y**2 + z**2 - 100**2", 200, 200, 5000);
 
 //////////////////////////////////////////////////////////////////////////////////
 //		Camera Controls							//
@@ -183,7 +183,7 @@ function graph(array1, array2)
 
 function graphFunction(inputFunction)
 {
-    var particleCount = 40000,
+    var particleCount = 1000,
         particles = new THREE.Geometry(),
         pMaterial = new THREE.ParticleBasicMaterial({
           size: 5,
@@ -205,6 +205,49 @@ function graphFunction(inputFunction)
 
         // add it to the geometry
         particles.vertices.push(particle);
+    }
+
+    // create the particle system
+    var particleSystem = new THREE.ParticleSystem(
+        particles,
+        pMaterial);
+
+    // add it to the scene
+    scene.add(particleSystem);
+}
+
+function parseSqrt(input)
+{
+    input = input.replace(/sqrt/g,'Math.sqrt');
+    return input;
+}
+
+function graphFunction2(inputFunction, domain, range, particleCount)
+{
+    var eqn = CQ(inputFunction).solve("z");
+    var f0 = eqn[0].toFunction('x', 'y');
+    var f1 = eqn[1].toFunction('x', 'y');
+    
+    var particles = new THREE.Geometry(),
+        pMaterial = new THREE.ParticleBasicMaterial({
+          size: 1,
+          color: 0xffffff
+        });
+    
+    // now create the individual particles
+    for (var p = 0; p < particleCount; p++) {
+        
+        var f = (p%2 == 0) ? f0 : f1,
+            pX = domain*(Math.random() - .5),
+            pY = range*(Math.random() - .5),
+            pZ = eval(parseSqrt(f(pX, pY).toString())),
+            particle = new THREE.Vector3(pX, pZ, pY);
+
+        // add it to the geometry
+        if (pZ !== NaN)
+        {
+            particles.vertices.push(particle);
+        }
     }
 
     // create the particle system

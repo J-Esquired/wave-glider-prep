@@ -2,9 +2,9 @@
   "name": "Express-web-app",
   "version": "1.0.0",
   "dependencies": {
-    "jade": "*",
     "express": "^4.0.0",
     "express-generator": "^4.13.1",
+    "jade": "*",
     "mysql": "*"
   }
 }
