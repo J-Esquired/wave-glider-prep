@@ -77,7 +77,7 @@ function inputFunction1(num1, num2) {
 }
 
 //graphFunction(inputFunction1);
-graphFunction2("x**2 + y**2 + z**2 - 100**2", 200, 200, 5000);
+graphFunction2("x**2 + y**2 + z**2 - 100**2", 200, 200, 10000);
 
 //////////////////////////////////////////////////////////////////////////////////
 //		Camera Controls							//
@@ -224,28 +224,27 @@ function parseSqrt(input)
 
 function graphFunction2(inputFunction, domain, range, particleCount)
 {
-    var eqn = CQ(inputFunction).solve("z");
-    var f0 = eqn[0].toFunction('x', 'y');
-    var f1 = eqn[1].toFunction('x', 'y');
-    
-    var particles = new THREE.Geometry(),
+    var eqn = CQ(inputFunction).solve("z"),
+        particles = new THREE.Geometry(),
         pMaterial = new THREE.ParticleBasicMaterial({
           size: 1,
-          color: 0xffffff
+          vertexColors: THREE.VertexColors
         });
     
     // now create the individual particles
     for (var p = 0; p < particleCount; p++) {
         
-        var f = (p%2 == 0) ? f0 : f1,
+        var eIndex = p % eqn.length,
+            f = eqn[eIndex].toFunction('x', 'y'),
             pX = domain*(Math.random() - .5),
             pY = range*(Math.random() - .5),
             pZ = eval(parseSqrt(f(pX, pY).toString())),
             particle = new THREE.Vector3(pX, pZ, pY);
 
         // add it to the geometry
-        if (pZ !== NaN)
+        if (!isNaN(pZ))
         {
+            particles.colors.push( new THREE.Color(0xffffff).setRGB(255*Math.random(), 255*Math.random(), 255*Math.random()));
             particles.vertices.push(particle);
         }
     }
