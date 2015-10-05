@@ -209,10 +209,79 @@ var planets =
             },
             radius: 2440,
             color: 0x9E9E9E,
-            axialTilt: 0,
-            orbitalRate: 0,
-            rotationRate: 0,
-            orbitalIrregularity: 0
+            axialTilt: .034 * (Math.PI/180),
+            orbitalTime: 87.969,
+            rotationTime: 58 + (15/24),
+            inclination: 6.34*(Math.PI/180),
+            orbitalIrregularity: .205630,
+            SMA: 57909050
+        }, 
+        {
+            spherical: 
+            {
+                ro: 0,
+                theta: 0, 
+                phi: 0
+            },
+            cartesian:
+            {
+                x: 0,
+                y: 0,
+                z: 0
+            },
+            radius: 6051.8,
+            color: 0xefdea1,
+            axialTilt: 177.36 * (Math.PI/180),
+            orbitalTime: 224.701,
+            rotationTime: 116.75,
+            inclination: 2.19 *(Math.PI/180),
+            orbitalIrregularity: .00677,
+            SMA: 108208000
+        }, 
+        {
+            spherical: 
+            {
+                ro: 0,
+                theta: 0, 
+                phi: 0
+            },
+            cartesian:
+            {
+                x: 0,
+                y: 0,
+                z: 0
+            },
+            radius: 6371,
+            color: 0,
+            axialTilt: 23.439 * (Math.PI/180),
+            orbitalTime: 365.256,
+            rotationTime: 1,
+            inclination: 1.579 * (Math.PI/180),
+            orbitalIrregularity: .0167,
+            SMA: 149598261,
+            moons:
+            [
+                {
+                    spherical: 
+                    {
+                        ro: 0,
+                        theta: 0, 
+                        phi: 0
+                    },
+                    cartesian:
+                    {
+                        x: 0,
+                        y: 0,
+                        z: 0
+                    },
+                    radius: 1737.1,
+                    color: 0x808080,
+                    orbitalTime: 27.32,
+                    inclination: 3.5 * (Math.PI/180),
+                    orbitalIrregularity: .0167,
+                    SMA: 384399
+                }
+            ]
         }, 
         {
             spherical: 
@@ -230,9 +299,11 @@ var planets =
             radius: 0,
             color: 0,
             axialTilt: 0,
-            orbitalRate: 0,
-            rotationRate: 0,
+            orbitalTime: 0,
+            rotationTime: 0,
+            inclination: 0,
             orbitalIrregularity: 0,
+            SMA: 0,
             rings:
             [
                 {
@@ -262,8 +333,6 @@ var planets =
                 }
             ]
         }, 
-        earth: [0,0],
-        mars: [0,0], 
         jupiter: [0,0], 
         saturn: [0,0], 
         uranus: [0,0], 
