@@ -5,6 +5,7 @@
     "express": "^4.0.0",
     "express-generator": "^4.13.1",
     "jade": "*",
-    "mysql": "*"
+    "mysql": "*",
+    "node-twitterbot": "^0.2.2"
   }
 }
