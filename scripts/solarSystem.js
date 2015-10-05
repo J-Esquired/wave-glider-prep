@@ -252,7 +252,7 @@ var planets =
                 z: 0
             },
             radius: 6371,
-            color: 0,
+            color: 0x4099ff,
             axialTilt: 23.439 * (Math.PI/180),
             orbitalTime: 365.256,
             rotationTime: 1,
@@ -296,19 +296,99 @@ var planets =
                 y: 0,
                 z: 0
             },
-            radius: 0,
-            color: 0,
-            axialTilt: 0,
-            orbitalTime: 0,
-            rotationTime: 0,
-            inclination: 0,
-            orbitalIrregularity: 0,
-            SMA: 0,
+            radius: 3389.5,
+            color: 0x,
+            axialTilt: 25.19 * (Math.PI/180),
+            orbitalTime: 686.971,
+            rotationTime: 1 + (2/3)/24,
+            inclination: 1.67 * (Math.PI/180),
+            orbitalIrregularity: .0935,
+            SMA: 227939100,
+            moons:
+            [
+                {
+                    spherical: 
+                    {
+                        ro: 0,
+                        theta: 0, 
+                        phi: 0
+                    },
+                    cartesian:
+                    {
+                        x: 0,
+                        y: 0,
+                        z: 0
+                    },
+                    radius: 11.2667,
+                    color: 0xb7a5a1,
+                    orbitalTime: .3189,
+                    inclination: 3.5 * (Math.PI/180),
+                    orbitalIrregularity: .0167,
+                    SMA: 384399
+                },
+                {
+                    spherical: 
+                    {
+                        ro: 0,
+                        theta: 0, 
+                        phi: 0
+                    },
+                    cartesian:
+                    {
+                        x: 0,
+                        y: 0,
+                        z: 0
+                    },
+                    radius: 6.2,
+                    color: 0xCDC29A,
+                    orbitalTime: 1.263,
+                    inclination: 26 * (Math.PI/180),
+                    orbitalIrregularity: .00033,
+                    SMA: 23463
+                }
+            ]
+        }, 
+        {
+            spherical: 
+            {
+                ro: 0,
+                theta: 0, 
+                phi: 0
+            },
+            cartesian:
+            {
+                x: 0,
+                y: 0,
+                z: 0
+            },
+            radius: 69911,
+            color: 0xc1a88a,
+            axialTilt: 3.13 * (Math.PI/180),
+            orbitalTime: 4332.59,
+            rotationTime: (9 + (56/60))/24,
+            inclination: .32 * (Math.PI/180),
+            orbitalIrregularity: .048775,
+            SMA: 778547200,
             rings:
             [
                 {
-                    innerRadius: 0,
-                    outerRadius: 0,
+                    innerRadius: 92000,
+                    outerRadius: 122500,
+                    color: 0
+                },
+                {
+                    innerRadius: 122500,
+                    outerRadius: 129000,
+                    color: 0
+                },
+                {
+                    innerRadius: 129000,
+                    outerRadius: 182000,
+                    color: 0
+                },
+                {
+                    innerRadius: 129000,
+                    outerRadius: 226000,
                     color: 0
                 }
             ],
@@ -327,12 +407,140 @@ var planets =
                         y: 0,
                         z: 0
                     },
-                    radius: 0,
-                    color: 0,
-                    orbitalRate: 0
+                    radius: 2631,
+                    color: 0xb8b8b8,
+                    orbitalTime: 7.1546,
+                    inclination: .204 * (Math.PI/180),
+                    orbitalIrregularity: .0011,
+                    SMA: 1070412
+                },
+                {
+                    spherical: 
+                    {
+                        ro: 0,
+                        theta: 0, 
+                        phi: 0
+                    },
+                    cartesian:
+                    {
+                        x: 0,
+                        y: 0,
+                        z: 0
+                    },
+                    radius: 2410.3,
+                    color: 0x928371,
+                    orbitalTime: 16.689,
+                    inclination: .205 * (Math.PI/180),
+                    orbitalIrregularity: .0074,
+                    SMA: 1882709
+                },
+                {
+                    spherical: 
+                    {
+                        ro: 0,
+                        theta: 0, 
+                        phi: 0
+                    },
+                    cartesian:
+                    {
+                        x: 0,
+                        y: 0,
+                        z: 0
+                    },
+                    radius: 1825,
+                    color: 0xfad354,
+                    orbitalTime: 1.769,
+                    inclination: .05 * (Math.PI/180),
+                    orbitalIrregularity: .0041,
+                    SMA: 421700
+                },
+                {
+                    spherical: 
+                    {
+                        ro: 0,
+                        theta: 0, 
+                        phi: 0
+                    },
+                    cartesian:
+                    {
+                        x: 0,
+                        y: 0,
+                        z: 0
+                    },
+                    radius: 1560.8,
+                    color: 0x9d7e60,
+                    orbitalTime: 3.5512,
+                    inclination: .471 * (Math.PI/180),
+                    orbitalIrregularity: .0094,
+                    SMA: 671034
                 }
             ]
-        }
+        }, 
+        {
+            spherical: 
+            {
+                ro: 0,
+                theta: 0, 
+                phi: 0
+            },
+            cartesian:
+            {
+                x: 0,
+                y: 0,
+                z: 0
+            },
+            radius: 58232,
+            color: 0xefdea1,
+            axialTilt: 26.73 * (Math.PI/180),
+            orbitalTime: 10759.22,
+            rotationTime: (10 + (39/60))/24,
+            inclination: .93 * (Math.PI/180),
+            orbitalIrregularity: .055723,
+            SMA: 1433449370,
+            rings:
+            [
+                {
+                    innerRadius: 74658,
+                    outerRadius: 92000,
+                    color: 0
+                },
+                {
+                    innerRadius: 92000,
+                    outerRadius: 117580,
+                    color: 0
+                },
+                {
+                    innerRadius: 122170,
+                    outerRadius: 136775,
+                    color: 0
+                }
+            ],
+            moons:
+            [
+                {
+                    spherical: 
+                    {
+                        ro: 0,
+                        theta: 0, 
+                        phi: 0
+                    },
+                    cartesian:
+                    {
+                        x: 0,
+                        y: 0,
+                        z: 0
+                    },
+                    radius: 2575,
+                    color: 0xfad354,
+                    orbitalTime: 15.945,
+                    inclination: .3485 * (Math.PI/180),
+                    orbitalIrregularity: .0288,
+                    SMA: 1221930
+                }
+            ]
+        }, 
+        uranus: [0,0], 
+        neptune: [0,0]
     ];
 
 function solarSystem(scale)
