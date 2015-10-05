@@ -332,11 +332,7 @@ var planets =
                     orbitalRate: 0
                 }
             ]
-        }, 
-        jupiter: [0,0], 
-        saturn: [0,0], 
-        uranus: [0,0], 
-        neptune: [0,0]
+        }
     ];
 
 function solarSystem(scale)
