@@ -238,6 +238,28 @@ var planets =
                 y: 0,
                 z: 0
             },
+            radius: 696300,
+            color: 0xFFD633,
+            axialTilt: 0,
+            orbitalTime: 0,
+            rotationTime: 0,
+            inclination: 0,
+            orbitalIrregularity: 0,
+            SMA: 0
+        },
+        {
+            spherical: 
+            {
+                ro: 0,
+                theta: 0, 
+                phi: 0
+            },
+            cartesian:
+            {
+                x: 0,
+                y: 0,
+                z: 0
+            },
             radius: 2440,
             color: 0x9E9E9E,
             axialTilt: .034 * (Math.PI/180),
@@ -328,7 +350,7 @@ var planets =
                 z: 0
             },
             radius: 3389.5,
-            color: 0x,
+            color: 0xb23e00,
             axialTilt: 25.19 * (Math.PI/180),
             orbitalTime: 686.971,
             rotationTime: 1 + (2/3)/24,
@@ -570,31 +592,152 @@ var planets =
                 }
             ]
         }, 
-        uranus: [0,0], 
-        neptune: [0,0]
+        {
+            spherical: 
+            {
+                ro: 0,
+                theta: 0, 
+                phi: 0
+            },
+            cartesian:
+            {
+                x: 0,
+                y: 0,
+                z: 0
+            },
+            radius: 25362,
+            color: 0x9ACBEC,
+            axialTilt: 97.77 * (Math.PI/180),
+            orbitalTime: 30687.15,
+            rotationTime: (17 + (14/60))/24,
+            inclination: 1.02 * (Math.PI/180),
+            orbitalIrregularity: .04722,
+            SMA: 2870671400,
+            rings:
+            [
+                {
+                    innerRadius: 0,
+                    outerRadius: 0,
+                    color: 0
+                }
+            ],
+            moons:
+            [
+                {
+                    spherical: 
+                    {
+                        ro: 0,
+                        theta: 0, 
+                        phi: 0
+                    },
+                    cartesian:
+                    {
+                        x: 0,
+                        y: 0,
+                        z: 0
+                    },
+                    radius: 788.4,
+                    color: 0xb2b2b2,
+                    orbitalTime: 8.705,
+                    inclination: .340 * (Math.PI/180),
+                    orbitalIrregularity: .0011,
+                    SMA: 435910
+                },
+                {
+                    spherical: 
+                    {
+                        ro: 0,
+                        theta: 0, 
+                        phi: 0
+                    },
+                    cartesian:
+                    {
+                        x: 0,
+                        y: 0,
+                        z: 0
+                    },
+                    radius: 761.4,
+                    color: 0xb2b2b2,
+                    orbitalTime: 13.463,
+                    inclination: .058 * (Math.PI/180),
+                    orbitalIrregularity: .0014,
+                    SMA: 583520
+                }
+            ]
+        }, 
+        {
+            spherical: 
+            {
+                ro: 0,
+                theta: 0, 
+                phi: 0
+            },
+            cartesian:
+            {
+                x: 0,
+                y: 0,
+                z: 0
+            },
+            radius: 24622,
+            color: 0x4c4cff,
+            axialTilt: 28.32 * (Math.PI/180),
+            orbitalTime: 60190,
+            rotationTime: (16 + (6/60))/24,
+            inclination: .72 * (Math.PI/180),
+            orbitalIrregularity: .00868,
+            SMA: 4498542600,
+            rings:
+            [
+                {
+                    innerRadius: 0,
+                    outerRadius: 0,
+                    color: 0
+                }
+            ],
+            moons:
+            [
+                {
+                    spherical: 
+                    {
+                        ro: 0,
+                        theta: 0, 
+                        phi: 0
+                    },
+                    cartesian:
+                    {
+                        x: 0,
+                        y: 0,
+                        z: 0
+                    },
+                    radius: 1352.6,
+                    color: 0xb2b2b2,
+                    orbitalTime: 5.877,
+                    inclination: 156.865 * (Math.PI/180),
+                    orbitalIrregularity: 0,
+                    SMA: 354759
+                }
+            ]
+        }
     ];
+
+solarSystem(.0001);
 
 function solarSystem(scale)
 {
-    sun();
-    mercury();
-    venus();
-    earth();
-    mars();
-    jupiter();
-    saturn();
-    uranus();
-    neptune();
+    for (var i = 0; i < planets.length; i++)
+    {
+        planet(planets[i], (SCALE));
+    }
 }
 
-function sun()
+function planet(planet, scale)
 {
-    var radius = 5,//scale*696342,
-        particleCount = 10*radius,
+    var radius = 1000,
+        particleCount = (radius*radius)/100,
         particles = new THREE.Geometry(),
         pMaterial = new THREE.ParticleBasicMaterial({
           size: 5,
-          color: 0xFFD633,
+          color: ,
           blending: THREE.AdditiveBlending,
           transparent: false
         });
@@ -623,383 +766,5 @@ function sun()
     
     onRenderFcts.push(function(){
         var angle	= -1*Date.now()/10000 * Math.PI;
-    })
-}
-
-function mercury()
-{
-    var radius = 20,
-        particleCount = 5*radius,
-        particles = new THREE.Geometry(),
-        pMaterial = new THREE.ParticleBasicMaterial({
-          size: 5,
-          color: 0xFF6600,
-          blending: THREE.AdditiveBlending,
-          transparent: false
-        });
-    
-    // now create the individual particles
-    for (var p = 0; p < particleCount; p++) {
-
-        var phi = (Math.PI/2) + Math.asin((2*p/particleCount) - 1),
-            theta = (2*Math.PI)*Math.random(),
-            pX = radius*Math.cos(theta)*Math.sin(phi),
-            pY = 2020 + radius*Math.sin(theta)*Math.sin(phi),
-            pZ = radius*Math.cos(phi),
-            particle = new THREE.Vector3(pX, pZ, pY);
-
-        // add it to the geometry
-        particles.vertices.push(particle);
-    }
-
-    // create the particle system
-    var particleSystem = new THREE.ParticleSystem(
-        particles,
-        pMaterial);
-
-    // add it to the scene
-    scene.add(particleSystem);
-    
-    onRenderFcts.push(function(){
-        var angle	= -1*Date.now()/20000 * Math.PI;
-        
-        particleSystem.rotation.y = 5*angle;
-    })
-}
-
-function venus()
-{
-    var radius = 25,
-        particleCount = 5*radius,
-        particles = new THREE.Geometry(),
-        pMaterial = new THREE.ParticleBasicMaterial({
-          size: 5,
-          color: 0xFF9933,
-          blending: THREE.AdditiveBlending,
-          transparent: false
-        });
-    
-    // now create the individual particles
-    for (var p = 0; p < particleCount; p++) {
-
-        var phi = (Math.PI/2) + Math.asin((2*p/particleCount) - 1),
-            theta = (2*Math.PI)*Math.random(),
-            pX = radius*Math.cos(theta)*Math.sin(phi),
-            pY = 2300 + radius*Math.sin(theta)*Math.sin(phi),
-            pZ = radius*Math.cos(phi),
-            particle = new THREE.Vector3(pX, pZ, pY);
-
-        // add it to the geometry
-        particles.vertices.push(particle);
-    }
-
-    // create the particle system
-    var particleSystem = new THREE.ParticleSystem(
-        particles,
-        pMaterial);
-
-    // add it to the scene
-    scene.add(particleSystem);
-    
-    onRenderFcts.push(function(){
-        var angle	= -1*Date.now()/20000 * Math.PI;
-        
-        particleSystem.rotation.y = 1.4*angle;
-    })
-}
-
-function earth()
-{
-    var radius = 50,
-        particleCount = 5*radius,
-        particles = new THREE.Geometry(),
-        pMaterial = new THREE.ParticleBasicMaterial({
-          size: 5,
-          color: 0x0066FF,
-          blending: THREE.AdditiveBlending,
-          transparent: false
-        });
-    
-    // now create the individual particles
-    for (var p = 0; p < particleCount; p++) {
-
-        var phi = (Math.PI/2) + Math.asin((2*p/particleCount) - 1),
-            theta = (2*Math.PI)*Math.random(),
-            pX = radius*Math.cos(theta)*Math.sin(phi),
-            pY = 2500 + radius*Math.sin(theta)*Math.sin(phi),
-            pZ = radius*Math.cos(phi),
-            particle = new THREE.Vector3(pX, pZ, pY);
-
-        // add it to the geometry
-        particles.vertices.push(particle);
-    }
-
-    // create the particle system
-    var particleSystem = new THREE.ParticleSystem(
-        particles,
-        pMaterial);
-
-    // add it to the scene
-    scene.add(particleSystem);
-    
-    onRenderFcts.push(function(){
-        var angle	= -1*Date.now()/20000 * Math.PI;
-        
-        particleSystem.rotation.y = angle;
-        
-        planets.earth = [2500*Math.cos(angle), 2500*Math.sin(angle)];
-    })
-    
-    moon();
-}
-
-function mars()
-{
-    var radius = 15,
-        particleCount = 5*radius,
-        particles = new THREE.Geometry(),
-        pMaterial = new THREE.ParticleBasicMaterial({
-          size: 5,
-          color: 0xFF4719,
-          blending: THREE.AdditiveBlending,
-          transparent: false
-        });
-    
-    // now create the individual particles
-    for (var p = 0; p < particleCount; p++) {
-
-        var phi = (Math.PI/2) + Math.asin((2*p/particleCount) - 1),
-            theta = (2*Math.PI)*Math.random(),
-            pX = radius*Math.cos(theta)*Math.sin(phi),
-            pY = 2750 + radius*Math.sin(theta)*Math.sin(phi),
-            pZ = radius*Math.cos(phi),
-            particle = new THREE.Vector3(pX, pZ, pY);
-
-        // add it to the geometry
-        particles.vertices.push(particle);
-    }
-
-    // create the particle system
-    var particleSystem = new THREE.ParticleSystem(
-        particles,
-        pMaterial);
-
-    // add it to the scene
-    scene.add(particleSystem);
-    
-    onRenderFcts.push(function(){
-        var angle	= -1*Date.now()/20000 * Math.PI;
-        
-        particleSystem.rotation.y = .6*angle;
-    })
-}
-
-function jupiter()
-{
-    var radius = 200,
-        particleCount = 5*radius,
-        particles = new THREE.Geometry(),
-        pMaterial = new THREE.ParticleBasicMaterial({
-          size: 5,
-          color: 0xB88C60,
-          blending: THREE.AdditiveBlending,
-          transparent: false
-        });
-    
-    // now create the individual particles
-    for (var p = 0; p < particleCount; p++) {
-
-        var phi = (Math.PI/2) + Math.asin((2*p/particleCount) - 1),
-            theta = (2*Math.PI)*Math.random(),
-            pX = radius*Math.cos(theta)*Math.sin(phi),
-            pY = 3800 + radius*Math.sin(theta)*Math.sin(phi),
-            pZ = radius*Math.cos(phi),
-            particle = new THREE.Vector3(pX, pZ, pY);
-
-        // add it to the geometry
-        particles.vertices.push(particle);
-    }
-
-    // create the particle system
-    var particleSystem = new THREE.ParticleSystem(
-        particles,
-        pMaterial);
-
-    // add it to the scene
-    scene.add(particleSystem);
-    
-    onRenderFcts.push(function(){
-        var angle	= -1*Date.now()/20000 * Math.PI + 500;
-        
-        particleSystem.position.z = 7*Math.sin(20*angle);
-        particleSystem.rotation.x = 13*Math.sin(.08*angle);
-        particleSystem.rotation.y = 20*angle;
-    })
-}
-
-function saturn()
-{
-    var radius = 175,
-        particleCount = 5*radius,
-        particles = new THREE.Geometry(),
-        pMaterial = new THREE.ParticleBasicMaterial({
-          size: 5,
-          color: 0xFFD633,
-          blending: THREE.AdditiveBlending,
-          transparent: false
-        });
-    
-    // now create the individual particles
-    for (var p = 0; p < particleCount; p++) {
-
-        var phi = (Math.PI/2) + Math.asin((2*p/particleCount) - 1),
-            theta = (2*Math.PI)*Math.random(),
-            pX = radius*Math.cos(theta)*Math.sin(phi),
-            pY = 4500 + radius*Math.sin(theta)*Math.sin(phi),
-            pZ = radius*Math.cos(phi),
-            particle = new THREE.Vector3(pX, pZ, pY);
-
-        // add it to the geometry
-        particles.vertices.push(particle);
-    }
-
-    // create the particle system
-    var particleSystem = new THREE.ParticleSystem(
-        particles,
-        pMaterial);
-
-    // add it to the scene
-    scene.add(particleSystem);
-    
-    onRenderFcts.push(function(){
-        var angle	= -1*Date.now()/20000 * Math.PI;
-        
-        particleSystem.rotation.y = .03*angle;
-    })
-}
-
-function uranus()
-{
-    var radius = 100,
-        particleCount = 5*radius,
-        particles = new THREE.Geometry(),
-        pMaterial = new THREE.ParticleBasicMaterial({
-          size: 5,
-          color: 0x0000CC,
-          blending: THREE.AdditiveBlending,
-          transparent: false
-        });
-    
-    // now create the individual particles
-    for (var p = 0; p < particleCount; p++) {
-
-        var phi = (Math.PI/2) + Math.asin((2*p/particleCount) - 1),
-            theta = (2*Math.PI)*Math.random(),
-            pX = radius*Math.cos(theta)*Math.sin(phi),
-            pY = 5000 + radius*Math.sin(theta)*Math.sin(phi),
-            pZ = radius*Math.cos(phi),
-            particle = new THREE.Vector3(pX, pZ, pY);
-
-        // add it to the geometry
-        particles.vertices.push(particle);
-    }
-
-    // create the particle system
-    var particleSystem = new THREE.ParticleSystem(
-        particles,
-        pMaterial);
-
-    // add it to the scene
-    scene.add(particleSystem);
-    
-    onRenderFcts.push(function(){
-        var angle	= -1*Date.now()/20000 * Math.PI;
-        
-        particleSystem.rotation.y = .015*angle;
-    })
-}
-
-function neptune()
-{
-    var radius = 75,
-        particleCount = 5*radius,
-        particles = new THREE.Geometry(),
-        pMaterial = new THREE.ParticleBasicMaterial({
-          size: 5,
-          color: 0x000099,
-          blending: THREE.AdditiveBlending,
-          transparent: false
-        });
-    
-    // now create the individual particles
-    for (var p = 0; p < particleCount; p++) {
-
-        var phi = (Math.PI/2) + Math.asin((2*p/particleCount) - 1),
-            theta = (2*Math.PI)*Math.random(),
-            pX = radius*Math.cos(theta)*Math.sin(phi),
-            pY = 5400 + radius*Math.sin(theta)*Math.sin(phi),
-            pZ = radius*Math.cos(phi),
-            particle = new THREE.Vector3(pX, pZ, pY);
-
-        // add it to the geometry
-        particles.vertices.push(particle);
-    }
-
-    // create the particle system
-    var particleSystem = new THREE.ParticleSystem(
-        particles,
-        pMaterial);
-
-    // add it to the scene
-    scene.add(particleSystem);
-    
-    onRenderFcts.push(function(){
-        var angle	= -1*Date.now()/20000 * Math.PI;
-        
-        particleSystem.rotation.y = .008*angle;
-    })
-}
-
-function moon()
-{
-    var radius = 10,
-        particleCount = 5*radius,
-        particles = new THREE.Geometry(),
-        pMaterial = new THREE.ParticleBasicMaterial({
-          size: 5,
-          color: 0xffffff,
-          blending: THREE.AdditiveBlending,
-          transparent: false
-        });
-    
-    // now create the individual particles
-    for (var p = 0; p < particleCount; p++) {
-
-        var phi = (Math.PI/2) + Math.asin((2*p/particleCount) - 1),
-            theta = (2*Math.PI)*Math.random(),
-            pX = radius*Math.cos(theta)*Math.sin(phi),
-            pY = 200 + radius*Math.sin(theta)*Math.sin(phi),
-            pZ = radius*Math.cos(phi),
-            particle = new THREE.Vector3(pX, pZ, pY);
-
-        // add it to the geometry
-        particles.vertices.push(particle);
-    }
-
-    // create the particle system
-    var particleSystem = new THREE.ParticleSystem(
-        particles,
-        pMaterial);
-
-    // add it to the scene
-    scene.add(particleSystem);
-    
-    onRenderFcts.push(function(){
-        var angle	= Date.now()/20000 * Math.PI;
-        
-        particleSystem.position.z = planets.earth[0];
-        particleSystem.position.x = planets.earth[1];
-        
-        particleSystem.rotation.y = 12*angle;
     })
 }
