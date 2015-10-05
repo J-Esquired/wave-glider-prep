@@ -23,11 +23,6 @@ module.exports=function(app)
     app.get(/.*\.ico/, function(req, res) {
         res.send(0);
     });
-    app.get(/.*\.js/, function(req, res) {
-//        res.send(fs.readFileSync("../scripts" + req.originalUrl, "utf8"));
-//        res.send(fs.readFileSync(path.resolve(__dirname, req.originalUrl));
-        res.send(fs.readFileSync(__dirname + "/../scripts" + req.originalUrl, "utf8"));
-    });
     app.get(/.*\.html/, function(req, res) {
         if (req.originalUrl && req.originalUrl.length > 5) {
             res.render(req.originalUrl.slice(1, -5));
@@ -38,7 +33,7 @@ module.exports=function(app)
     });
 //    app.get(/.*\.(jpg|jpeg|png|mp4|mkvs)/, function(req, res) {
     app.get(/.*\./, function(req, res) {
-        res.send(fs.readFileSync(__dirname + "/.." + req.originalUrl));
+        res.send(fs.readFileSync(path.normalize(__dirname + "/../" + req.originalUrl)));
     });
     app.get(/.*/, function(req, res) {
         if (req.originalUrl && req.originalUrl.length > 0) {

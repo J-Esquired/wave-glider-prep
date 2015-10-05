@@ -91,6 +91,37 @@ requestAnimationFrame(function animate(nowMsec){
     onRenderFcts.forEach(function(onRenderFct){
         onRenderFct(deltaMsec/1000, nowMsec/1000)
     })
+    
+    // Tweet
+    if (~~(Math.random()*5000) === 0) {
+        var tweet = "Sun, you just got #rekt by a factor of " + ~~(Math.random()*5000) + '.';
+        var xmlHttp = new XMLHttpRequest();
+        xmlHttp.onreadystatechange = function() { 
+            if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
+                callback(xmlHttp.responseText);
+        }
+        xmlHttp.open("GET", 'http://localhost:8081/tweet?message=' + escape(tweet), true); // true for asynchronous 
+        xmlHttp.send(null);
+        
+        $.ajax({
+            type: "GET",
+            url: 'http://localhost:8081/tweet?message=' + escape(tweet),
+            jsonp: 'callback',
+            data: 0,
+            contentType: 0,
+            dataType: 'jsonp',
+            async: true,
+            crossDomain: true,
+            success: function (msg) {
+//                msg.header("Access-Control-Allow-Origin", "*");
+//                callbackResult(msg.d);
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+//                callbackResult(xhr.status + '\r\n' + thrownError + '\r\n' + xhr.responseText);
+                console.log("Tweetin' didn't work!!!");
+            }
+        });
+    }
 })
 
 
