@@ -82,12 +82,21 @@ graphFunction2("x**2 + y**2 + z**2 - 100**2", 200, 200, 10000);
 //////////////////////////////////////////////////////////////////////////////////
 //		Camera Controls							//
 //////////////////////////////////////////////////////////////////////////////////
-var mouse	= {x : 0, y : 0, scroll : 10000}
-document.addEventListener('mousemove', function(event){
-    mouse.x	= (event.clientX / window.innerWidth ) - 0.5
-    mouse.y	= (event.clientY / window.innerHeight) + 0.5
+var mouse	= {x : 0, y : 0, scroll : 10000, isDown: false}
+
+document.addEventListener('mousedown', function(event){mouse.isDown = true}, false)
+document.addEventListener('mouseup', function(event){mouse.isDown = false}, false)
+                          
+document.addEventListener('mousemove', function(event)
+{
+    if (mouse.isDown)
+    {
+        mouse.x	= (event.clientX / window.innerWidth ) - 0.5
+        mouse.y	= (event.clientY / window.innerHeight) + 0.5
+    }
 }, false)
-document.addEventListener('mousewheel', function(event){
+document.addEventListener('mousewheel', function(event)
+{
     mouse.scroll += ((typeof event.wheelDelta != "undefined")?(-event.wheelDelta):event.detail)*(mouse.scroll/1000);
     if (mouse.scroll < 0)
     {
@@ -244,7 +253,7 @@ function graphFunction2(inputFunction, domain, range, particleCount)
         // add it to the geometry
         if (!isNaN(pZ))
         {
-            particles.colors.push( new THREE.Color(0xffffff).setRGB(255*Math.random(), 255*Math.random(), 255*Math.random()));
+            particles.colors.push( new THREE.Color(0xffffff).setRGB(Math.random(), Math.random(), Math.random()));
             particles.vertices.push(particle);
         }
     }

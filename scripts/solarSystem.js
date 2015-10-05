@@ -36,44 +36,6 @@ onRenderFcts.push(function(){
     //spotLight.position.y	= 100 + Math.sin(angle*0.5)*200;
     spotLight.position.z	= Math.sin(angle*-0.1)*200;		
 })
-//////////////////////////////////////////////////////////////////////////////////
-//		stuff								//
-//////////////////////////////////////////////////////////////////////////////////
-
-var geometry	= new THREE.DodecahedronGeometry(5, 5);
-var material	= new THREE.MeshPhongMaterial({
-    ambient		: 0x444444,
-    color		: 0x8844AA,
-    shininess	: 300, 
-    specular	: 0x33AA33,
-    shading		: THREE.SmoothShading
-});
-var torusKnot	= new THREE.Mesh( geometry, material );
-torusKnot.position.y		= 4;
-//scene.add( torusKnot );
-
-onRenderFcts.push(function(){
-    var angle	= Date.now()/1000 * Math.PI;
-// angle	= Math.PI*2
-    torusKnot.position.x	= Math.cos(angle)*50;
-    torusKnot.position.z	= Math.sin(angle*-0.7)*50;	
-    torusKnot.position.y    = 15 + Math.cos(angle*.5)*10
-})
-
-
-torusKnot.castShadow    = true;
-torusKnot.receiveShadow	= true;
-
-var arrayX = [0];
-var arrayY = [0];
-
-for (var i = 0; i < 100; i++)
-{
-    arrayX[i] = i*i/10000;
-    arrayY[i] = 25*Math.sin(i*Math.PI/10);
-}
-
-solarSystem();
 
 //////////////////////////////////////////////////////////////////////////////////
 //		Camera Controls							//
@@ -227,10 +189,88 @@ function graphSphere(radius, x, y, z, orbitY)
 //////////////////////////////////////////////////////////////////////////////////
 //		solar system							//
 //////////////////////////////////////////////////////////////////////////////////
+solarSystem();
 
-var planets = {mercury: [0,0], mercury: [0,0], earth: [0,0]};
 
-function solarSystem()
+var planets = 
+    [ 
+        {
+            spherical: 
+            {
+                ro: 0,
+                theta: 0, 
+                phi: 0
+            },
+            cartesian:
+            {
+                x: 0,
+                y: 0,
+                z: 0
+            },
+            radius: 2440,
+            color: 0x9E9E9E,
+            axialTilt: 0,
+            orbitalRate: 0,
+            rotationRate: 0,
+            orbitalIrregularity: 0
+        }, 
+        {
+            spherical: 
+            {
+                ro: 0,
+                theta: 0, 
+                phi: 0
+            },
+            cartesian:
+            {
+                x: 0,
+                y: 0,
+                z: 0
+            },
+            radius: 0,
+            color: 0,
+            axialTilt: 0,
+            orbitalRate: 0,
+            rotationRate: 0,
+            orbitalIrregularity: 0,
+            rings:
+            [
+                {
+                    innerRadius: 0,
+                    outerRadius: 0,
+                    color: 0
+                }
+            ],
+            moons:
+            [
+                {
+                    spherical: 
+                    {
+                        ro: 0,
+                        theta: 0, 
+                        phi: 0
+                    },
+                    cartesian:
+                    {
+                        x: 0,
+                        y: 0,
+                        z: 0
+                    },
+                    radius: 0,
+                    color: 0,
+                    orbitalRate: 0
+                }
+            ]
+        }, 
+        earth: [0,0],
+        mars: [0,0], 
+        jupiter: [0,0], 
+        saturn: [0,0], 
+        uranus: [0,0], 
+        neptune: [0,0]
+    ];
+
+function solarSystem(scale)
 {
     sun();
     mercury();
@@ -245,7 +285,7 @@ function solarSystem()
 
 function sun()
 {
-    var radius = 1500,
+    var radius = 5,//scale*696342,
         particleCount = 10*radius,
         particles = new THREE.Geometry(),
         pMaterial = new THREE.ParticleBasicMaterial({
@@ -487,9 +527,9 @@ function jupiter()
     onRenderFcts.push(function(){
         var angle	= -1*Date.now()/20000 * Math.PI + 500;
         
-        particleSystem.position.z = 300*Math.sin(.08*angle);
-        particleSystem.rotation.x = .1*Math.sin(.08*angle);
-        particleSystem.rotation.y = .08*angle;
+        particleSystem.position.z = 7*Math.sin(20*angle);
+        particleSystem.rotation.x = 13*Math.sin(.08*angle);
+        particleSystem.rotation.y = 20*angle;
     })
 }
 
