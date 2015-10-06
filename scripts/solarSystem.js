@@ -10,7 +10,7 @@ renderer.shadowMapType 		= THREE.PCFSoftShadowMap;
 
 var onRenderFcts= [];
 var scene	= new THREE.Scene();
-var camera	= new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.01, 100000);
+var camera	= new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.01, 1000000);
 
 //////////////////////////////////////////////////////////////////////////////////
 //		Comment								//
@@ -220,10 +220,7 @@ function graphSphere(radius, x, y, z, orbitY)
 //////////////////////////////////////////////////////////////////////////////////
 //		solar system							//
 //////////////////////////////////////////////////////////////////////////////////
-solarSystem();
-
-
-var planets = 
+ planets = 
     [ 
         {
             spherical: 
@@ -241,8 +238,8 @@ var planets =
             radius: 696300,
             color: 0xFFD633,
             axialTilt: 0,
-            orbitalTime: 0,
-            rotationTime: 0,
+            orbitalTime: 1,
+            rotationTime: 10000,
             inclination: 0,
             orbitalIrregularity: 0,
             SMA: 0
@@ -720,26 +717,27 @@ var planets =
         }
     ];
 
-solarSystem(.0001);
+solarSystem(planets, .01);
 
-function solarSystem(scale)
+function solarSystem(planets, scale)
 {
     for (var i = 0; i < planets.length; i++)
     {
-        planet(planets[i], (SCALE));
+        planet(planets[i], scale);
     }
 }
 
 function planet(planet, scale)
 {
-    var radius = 1000,
-        particleCount = (radius*radius)/100,
+    planet.radius = planet.radius * scale;
+    planet.SMA = planet.SMA * scale / 75;
+    
+    var particleCount = planet.radius * 10,
         particles = new THREE.Geometry(),
         pMaterial = new THREE.ParticleBasicMaterial({
           size: 5,
-          color: ,
-          blending: THREE.AdditiveBlending,
-          transparent: false
+          color: planet.color,
+          blending: THREE.AdditiveBlending
         });
     
     // now create the individual particles
@@ -747,9 +745,9 @@ function planet(planet, scale)
 
         var phi = (Math.PI/2) + Math.asin((2*p/particleCount) - 1),
             theta = (2*Math.PI)*Math.random(),
-            pX = radius*Math.cos(theta)*Math.sin(phi),
-            pY = radius*Math.sin(theta)*Math.sin(phi),
-            pZ = radius*Math.cos(phi),
+            pX = planet.radius*Math.cos(theta)*Math.sin(phi),
+            pY = planet.radius*Math.sin(theta)*Math.sin(phi),
+            pZ = planet.radius*Math.cos(phi),
             particle = new THREE.Vector3(pX, pZ, pY);
 
         // add it to the geometry
@@ -765,6 +763,20 @@ function planet(planet, scale)
     scene.add(particleSystem);
     
     onRenderFcts.push(function(){
-        var angle	= -1*Date.now()/10000 * Math.PI;
+        var angle	= Date.now()/10 * Math.PI;
+        
+        planet.spherical.theta = angle/planet.orbitalTime;
+        planet.spherical.phi = Math.PI/2 - Math.sin(planet.spherical.theta) * planet.inclination;
+        particleSystem.position.x = planet.SMA*Math.cos(planet.spherical.theta)*Math.sin(planet.spherical.phi);
+        particleSystem.position.z = planet.SMA*Math.sin(planet.spherical.theta)*Math.sin(planet.spherical.phi);
+        particleSystem.position.y = planet.SMA*Math.cos(planet.spherical.phi);
+        
+        particleSystem.rotation.x = planet.axialTilt;
+        particleSystem.rotation.y = angle/planet.rotationTime;
     })
+    
+    for (var j = 0; j < planet.moons.length; j++)
+    {
+        
+    }
 }
