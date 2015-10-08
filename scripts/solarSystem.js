@@ -156,24 +156,24 @@ requestAnimationFrame(function animate(nowMsec){
         xmlHttp.open("GET", 'http://localhost:8081/tweet?message=' + escape(tweet), true); // true for asynchronous 
         xmlHttp.send(null);
         
-        $.ajax({
-            type: "GET",
-            url: 'http://localhost:8081/tweet?message=' + escape(tweet),
-            jsonp: 'callback',
-            data: 0,
-            contentType: 0,
-            dataType: 'jsonp',
-            async: true,
-            crossDomain: true,
-            success: function (msg) {
-//                msg.header("Access-Control-Allow-Origin", "*");
-//                callbackResult(msg.d);
-            },
-            error: function (xhr, ajaxOptions, thrownError) {
-//                callbackResult(xhr.status + '\r\n' + thrownError + '\r\n' + xhr.responseText);
-                console.log("Tweetin' didn't work!!!");
-            }
-        });
+//        $.ajax({
+//            type: "GET",
+//            url: 'http://localhost:8081/tweet?message=' + escape(tweet),
+//            jsonp: 'callback',
+//            data: 0,
+//            contentType: 0,
+//            dataType: 'jsonp',
+//            async: true,
+//            crossDomain: true,
+//            success: function (msg) {
+////                msg.header("Access-Control-Allow-Origin", "*");
+////                callbackResult(msg.d);
+//            },
+//            error: function (xhr, ajaxOptions, thrownError) {
+////                callbackResult(xhr.status + '\r\n' + thrownError + '\r\n' + xhr.responseText);
+//                console.log("Tweetin' didn't work!!!");
+//            }
+//        });
     }
 })
 
