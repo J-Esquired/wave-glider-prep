@@ -40,34 +40,57 @@ onRenderFcts.push(function(){
 //////////////////////////////////////////////////////////////////////////////////
 //		Camera Controls							//
 //////////////////////////////////////////////////////////////////////////////////
-var focus = 0;
+var focus = {planet: 0, moon: 0};
 var mouse	= {x : 0, y : 0, scroll : 0};
+
 document.addEventListener('keydown', function(event){
-    
+    console.log(event.keyCode);
     if (event.keyCode === 68 || event.keyCode === 39)
     {
-        focus++;
-        if (focus === planets.length)
+        focus.planet++;
+        focus.moon = 0;
+        if (focus.planet === planets.length)
         {
-            focus = 0;
+            focus.planet = 0;
         }
-        mouse.scroll = planets[focus].radius * 10;
+        scroll();
     }
     if (event.keyCode === 65 || event.keyCode === 37)
     {
-        focus--;
-        if (focus === -1)
+        focus.planet--;
+        focus.moon = 0;
+        if (focus.planet === -1)
         {
-            focus = planets.length - 1;
+            focus.planet = planets.length - 1;
         }
-        mouse.scroll = planets[focus].radius * 10;
+        scroll();
+    }
+    if (event.keyCode === 87 || event.keyCode === 38)
+    {
+        focus.moon++;
+        if (focus.moon === planets[focus.planet].moons.length + 1)
+        {
+            focus.moon = 0;
+        }
+        scroll();
+    }
+    if (event.keyCode === 83 || event.keyCode === 40)
+    {
+        focus.moon--;
+        if (focus.moon === -1)
+        {
+            focus.moon = planets[focus.planet].moons.length;
+        }
+        scroll();
     }
     
 }, false);
+
 document.addEventListener('mousemove', function(event){
     mouse.x	= (event.clientX / window.innerWidth ) - 0.5
     mouse.y	= (event.clientY / window.innerHeight) + 1
 }, false);
+
 document.addEventListener('mousewheel', function(event){
     mouse.scroll += ((typeof event.wheelDelta != "undefined")?(-event.wheelDelta):event.detail)*(mouse.scroll/1000);
     if (mouse.scroll < 0)
@@ -75,18 +98,29 @@ document.addEventListener('mousewheel', function(event){
         mouse.scroll = 0;
     }
 }, false);
+
 onRenderFcts.push(function(delta, now){
     
     var phi = Math.PI * mouse.y,
         theta = Math.PI * 2 * mouse.x;
     
-    camera.position.x = planets[focus].cartesian.x + mouse.scroll*Math.cos(theta)*Math.sin(phi);
-    camera.position.z = planets[focus].cartesian.y + mouse.scroll*Math.sin(theta)*Math.sin(phi);
-    camera.position.y = planets[focus].cartesian.z + mouse.scroll*Math.cos(phi);
-    
-    camera.lookAt( new THREE.Vector3(planets[focus].cartesian.x, planets[focus].cartesian.z, planets[focus].cartesian.y) );
-})
+    if (focus.moon === 0)
+    {
+        camera.position.x = planets[focus.planet].cartesian.x + mouse.scroll*Math.cos(theta)*Math.sin(phi);
+        camera.position.z = planets[focus.planet].cartesian.y + mouse.scroll*Math.sin(theta)*Math.sin(phi);
+        camera.position.y = planets[focus.planet].cartesian.z + mouse.scroll*Math.cos(phi);
 
+        camera.lookAt( new THREE.Vector3(planets[focus.planet].cartesian.x, planets[focus.planet].cartesian.z, planets[focus.planet].cartesian.y) );
+    }
+    else
+    {
+        camera.position.x = planets[focus.planet].moons[focus.moon - 1].cartesian.x + mouse.scroll*Math.cos(theta)*Math.sin(phi);
+        camera.position.z = planets[focus.planet].moons[focus.moon - 1].cartesian.y + mouse.scroll*Math.sin(theta)*Math.sin(phi);
+        camera.position.y = planets[focus.planet].moons[focus.moon - 1].cartesian.z + mouse.scroll*Math.cos(phi);
+
+        camera.lookAt( new THREE.Vector3(planets[focus.planet].moons[focus.moon - 1].cartesian.x, planets[focus.planet].moons[focus.moon - 1].cartesian.z, planets[focus.planet].moons[focus.moon - 1].cartesian.y) );
+    }
+})
 
 //////////////////////////////////////////////////////////////////////////////////
 //		render the scene						//
@@ -148,93 +182,17 @@ requestAnimationFrame(function animate(nowMsec){
 //		helper functions							//
 //////////////////////////////////////////////////////////////////////////////////
 
-function graph(array1, array2)
+function scroll()
 {
-    
-    var particleCount = array1.length*array2.length,
-        particles = new THREE.Geometry(),
-        pMaterial = new THREE.ParticleBasicMaterial({
-          size: 5,
-          map: THREE.ImageUtils.loadTexture(
-            "images/particle.png"
-          ),
-          blending: THREE.AdditiveBlending,
-          transparent: false
-        });
-    
-    // now create the individual particles
-    for (var p = 0; p < particleCount; p++) {
-
-        
-        var pX = 2*(p%array1.length) - array1.length,
-            pY = 2*Math.floor(p/array1.length) - array2.length,
-            pZ = (array1[(pX + array1.length)/2])*(array2[(pY + array2.length)/2]),
-            particle = new THREE.Vector3(pX, pZ, pY);
-
-        // add it to the geometry
-        particles.vertices.push(particle);
+    if (focus.moon === 0)
+    {
+        mouse.scroll = planets[focus.planet].radius * 10;
     }
-
-    // create the particle system
-    var particleSystem = new THREE.ParticleSystem(
-        particles,
-        pMaterial);
-
-    // add it to the scene
-    scene.add(particleSystem);
-
-    onRenderFcts.push(function(){
-        var angle	= Date.now()/10000 * Math.PI;
-        particleSystem.rotation.y	= angle;		
-    })
-
-}
-
-function graphSphere(radius, x, y, z, orbitY)
-{
-    
-    var particleCount = 3000,
-        particles = new THREE.Geometry(),
-        pMaterial = new THREE.ParticleBasicMaterial({
-          size: 5,
-          map: THREE.ImageUtils.loadTexture(
-            "images/particle.png"
-          ),
-          blending: THREE.AdditiveBlending,
-          transparent: false
-        });
-    
-    // now create the individual particles
-    for (var p = 0; p < particleCount; p++) {
-
-        var phi = (Math.PI/2) + Math.asin((2*p/particleCount) - 1),
-            theta = (2*Math.PI)*Math.random(),
-            pX = x + radius*Math.cos(theta)*Math.sin(phi),
-            pY = y + radius*Math.sin(theta)*Math.sin(phi),
-            pZ = z + radius*Math.cos(phi),
-            particle = new THREE.Vector3(pX, pZ, pY);
-
-        // add it to the geometry
-        particles.vertices.push(particle);
+    else
+    {
+        mouse.scroll = planets[focus.planet].moons[focus.moon].radius * 10;
     }
-
-    // create the particle system
-    var particleSystem = new THREE.ParticleSystem(
-        particles,
-        pMaterial);
-
-    // add it to the scene
-    scene.add(particleSystem);
-    
-    onRenderFcts.push(function(){
-        var angle	= -1*Date.now()/10000 * Math.PI;
-        if (orbitY)
-        {
-            particleSystem.rotation.y	= angle;
-        }
-    })
 }
-
 
 //////////////////////////////////////////////////////////////////////////////////
 //		solar system							//
@@ -381,51 +339,7 @@ function graphSphere(radius, x, y, z, orbitY)
             inclination: 1.67 * (Math.PI/180),
             orbitalIrregularity: .0935,
             SMA: 227939100,
-            moons:
-            [
-                {
-                    spherical: 
-                    {
-                        ro: 0,
-                        theta: 0, 
-                        phi: 0
-                    },
-                    cartesian:
-                    {
-                        x: 0,
-                        y: 0,
-                        z: 0
-                    },
-                    radius: 11.2667,
-                    color: 0xb7a5a1,
-                    orbitalTime: .3189,
-                    inclination: 3.5 * (Math.PI/180),
-                    orbitalIrregularity: .0167,
-                    SMA: 384399,
-                    system: 0
-                },
-                {
-                    spherical: 
-                    {
-                        ro: 0,
-                        theta: 0, 
-                        phi: 0
-                    },
-                    cartesian:
-                    {
-                        x: 0,
-                        y: 0,
-                        z: 0
-                    },
-                    radius: 6.2,
-                    color: 0xCDC29A,
-                    orbitalTime: 1.263,
-                    inclination: 26 * (Math.PI/180),
-                    orbitalIrregularity: .00033,
-                    SMA: 23463,
-                    system: 0
-                }
-            ],
+            moons: [],
             rings: []
         }, 
         {
@@ -763,7 +677,7 @@ function solarSystem(planets, scale)
     {
         planet(planets[i], scale);
     }
-    mouse.scroll = planets[focus].radius * 10;
+    mouse.scroll = planets[focus.planet].radius * 10;
 }
 
 function planet(planet, scale)
@@ -839,7 +753,7 @@ function planet(planet, scale)
     }
     
     onRenderFcts.push(function(){
-        var angle	= Date.now()/50/*(1000*60)*/ * (2*Math.PI);
+        var angle	= Date.now()/(1000) * (2*Math.PI);
         
         planet.spherical.theta = angle/planet.orbitalTime;
         planet.spherical.phi = Math.PI/2 - Math.sin(planet.spherical.theta) * planet.inclination;
@@ -854,7 +768,7 @@ function planet(planet, scale)
         for (var i = 0; i < planet.moons.length; i++)
         {
             planet.moons[i].spherical.theta = angle/planet.moons[i].orbitalTime;
-            planet.moons[i].spherical.phi = Math.PI/2 - Math.sin(planet.moons[i].spherical.theta) * planet.moons[i].inclination;
+            planet.moons[i].spherical.phi = Math.PI/2 - Math.sin(planet.moons[i].spherical.theta) * planet.moons[i].inclination + planet.axialTilt*Math.sin(planet.moons[i].spherical.theta);
 
             planet.moons[i].system.position.x = planet.moons[i].cartesian.x = planet.cartesian.x + planet.moons[i].SMA*Math.cos(planet.moons[i].spherical.theta)*Math.sin(planet.moons[i].spherical.phi);
             planet.moons[i].system.position.z = planet.moons[i].cartesian.y = planet.cartesian.y + planet.moons[i].SMA*Math.sin(planet.moons[i].spherical.theta)*Math.sin(planet.moons[i].spherical.phi);
