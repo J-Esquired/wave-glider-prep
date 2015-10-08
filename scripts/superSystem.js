@@ -1,4 +1,3 @@
-
 var renderer	= new THREE.WebGLRenderer({
     antialias	: true
 });
@@ -693,7 +692,7 @@ function planet(planet, scale, emitting)
     var particleSystem = new THREE.Mesh(
         particles,
         pMaterial);
-
+    
     // add it to the scene
     particleSystem.castShadow = true;
     particleSystem.receiveShadow = true;
@@ -704,33 +703,16 @@ function planet(planet, scale, emitting)
         planet.moons[j].radius = planet.moons[j].radius * scale;
         planet.moons[j].SMA = planet.moons[j].SMA * scale;
 
-        var particleCount = planet.moons[j].radius * 10,
-            moonParticles = new THREE.Geometry(),
-            moonMaterial = new THREE.ParticleBasicMaterial({
-              size: 5,
-              color: planet.moons[j].color,
-              blending: THREE.AdditiveBlending
-            });
+        var moonParticles = new THREE.DodecahedronGeometry(planet.moons[j].radius, 3),
+        moonMaterial = new THREE.MeshPhongMaterial({
+            map: THREE.ImageUtils.loadTexture('images/moonmap4k.jpg'),
+            shading: THREE.SmoothShading,
+            bumpMap: THREE.ImageUtils.loadTexture('images/moonbump4k.jpg'),
+            bumpScale: .1
+        });
 
-        // now create the individual particles
-        for (var p = 0; p < particleCount; p++) {
-
-            var phi = (Math.PI/2) + Math.asin((2*p/particleCount) - 1),
-                theta = (2*Math.PI)*Math.random(),
-                pX = planet.moons[j].radius*Math.cos(theta)*Math.sin(phi),
-                pY = planet.moons[j].radius*Math.sin(theta)*Math.sin(phi),
-                pZ = planet.moons[j].radius*Math.cos(phi),
-                particle = new THREE.Vector3(pX, pZ, pY);
-
-            // add it to the geometry
-            moonParticles.vertices.push(particle);
-        }
-
-        // create the particle system
-        var moonSystem = new THREE.ParticleSystem(
-            moonParticles,
-            moonMaterial);
-
+        var moonSystem = new THREE.Mesh(moonParticles, moonMaterial);
+        
         // add it to the scene
         planet.moons[j].system = moonSystem;
         scene.add(moonSystem);
