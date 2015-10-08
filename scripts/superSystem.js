@@ -23,12 +23,12 @@ spotLight.shadowDarkness	= 0.5;
 spotLight.shadowCameraVisible	= true;
 scene.add( spotLight );	
 
+var ambient = new THREE.AmbientLight(0x151515);
+scene.add(ambient);
+
 onRenderFcts.push(function(){
     var angle	= Date.now()/1000 * Math.PI;
-// angle	= Math.PI*2
-    spotLight.position.x	= Math.cos(angle*-0.1)*200;
-    //spotLight.position.y	= 100 + Math.sin(angle*0.5)*200;
-    spotLight.position.z	= Math.sin(angle*-0.1)*200;		
+    
 })
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -207,7 +207,7 @@ function scroll()
                 z: 0
             },
             radius: 696300,
-            color: 0xFFD633,
+            color: 0xffe700,
             axialTilt: 0,
             orbitalTime: 100000,
             rotationTime: 100000,
@@ -669,21 +669,24 @@ function solarSystem(planets, scale)
 {
     for (var i = 0; i < planets.length; i++)
     {
-        planet(planets[i], scale);
+        planet(planets[i], scale, i === 0);
     }
     mouse.scroll = planets[focus.planet].radius * 10;
 }
 
-function planet(planet, scale)
+function planet(planet, scale, emitting)
 {
     planet.radius = planet.radius * scale;
     planet.SMA = planet.SMA * scale / 50;
     
     var particles = new THREE.DodecahedronGeometry(planet.radius, 3),
         pMaterial = new THREE.MeshPhongMaterial({
-            color: planet.color,
-            shininess: 0,
-            shading: THREE.SmoothShading
+            map: THREE.ImageUtils.loadTexture('images/earthmap1k.jpg'),
+            shading: THREE.SmoothShading,
+            bumpMap: THREE.ImageUtils.loadTexture('images/earthbump1k.jpg'),
+            bumpScale: .1,
+            specularMap: THREE.ImageUtils.loadTexture('images/earthspec1k.jpg'),
+            specular: 0x252525
         });
 
     // create the particle system
