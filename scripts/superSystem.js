@@ -141,13 +141,13 @@ requestAnimationFrame(function animate(nowMsec){
     // Tweet
     if (~~(Math.random()*5000) === 0) {
         var tweet = "Sun, you just got #rekt by a factor of " + ~~(Math.random()*5000) + '.';
-        var xmlHttp = new XMLHttpRequest();
-        xmlHttp.onreadystatechange = function() { 
-            if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
-                callback(xmlHttp.responseText);
-        }
-        xmlHttp.open("GET", 'http://localhost:8081/tweet?message=' + escape(tweet), true); // true for asynchronous 
-        xmlHttp.send(null);
+//        var xmlHttp = new XMLHttpRequest();
+//        xmlHttp.onreadystatechange = function() { 
+//            if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
+//                callback(xmlHttp.responseText);
+//        }
+//        xmlHttp.open("GET", 'http://localhost:8081/tweet?message=' + escape(tweet), true); // true for asynchronous 
+//        xmlHttp.send(null);
         
 //        $.ajax({
 //            type: "GET",
