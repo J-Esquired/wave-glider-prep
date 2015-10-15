@@ -705,7 +705,7 @@ function planet(planet, scale, emitting)
 
         var moonParticles = new THREE.DodecahedronGeometry(planet.moons[j].radius, 3),
         moonMaterial = new THREE.MeshPhongMaterial({
-            map: THREE.ImageUtils.loadTexture('images/moonmap4k.jpg'),
+            map: THREE.ImageUtils.loadTexture('images/mad_moon.png'),
             shading: THREE.SmoothShading,
             bumpMap: THREE.ImageUtils.loadTexture('images/moonbump4k.jpg'),
             bumpScale: .1
