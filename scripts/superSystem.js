@@ -15,14 +15,14 @@ var camera	= new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHei
 //		Comment								//
 //////////////////////////////////////////////////////////////////////////////////
 
-var spotLight	= new THREE.PointLight(0xFFAA88, 1, 10000000, 8);
+var spotLight	= new THREE.PointLight(0xFFAA88, 1, 10000000, 15);
 spotLight.shadowCameraNear	= 0.01;		
 spotLight.castShadow		= true;
 spotLight.shadowDarkness	= 0.5;
 spotLight.shadowCameraVisible	= true;
 scene.add( spotLight );	
 
-var ambient = new THREE.AmbientLight(0x151515);
+var ambient = new THREE.AmbientLight(0xffffff);
 scene.add(ambient);
 
 onRenderFcts.push(function(){
@@ -213,6 +213,8 @@ function scroll()
             inclination: 0,
             orbitalIrregularity: 0,
             SMA: 0,
+            texture: 'mercurymap.jpg',
+            bump: 'mercurybump.jpg',
             moons: [],
             rings: []
         },
@@ -237,6 +239,8 @@ function scroll()
             inclination: 6.34*(Math.PI/180),
             orbitalIrregularity: .205630,
             SMA: 57909050,
+            texture: 'venusmap.jpg',
+            bump: 'venusbump.jpg',
             moons: [],
             rings: []
         }, 
@@ -261,6 +265,8 @@ function scroll()
             inclination: 2.19 *(Math.PI/180),
             orbitalIrregularity: .00677,
             SMA: 108208000,
+            texture: 'earthmap1k.jpg',
+            bump: 'earthbump1k.jpg',
             moons: [],
             rings: []
         }, 
@@ -285,6 +291,8 @@ function scroll()
             inclination: 1.579 * (Math.PI/180),
             orbitalIrregularity: .0167,
             SMA: 149598261,
+            texture: 'mars_1k_color.jpg',
+            bump: 'mars_1k_topo.jpg',
             moons:
             [
                 {
@@ -332,6 +340,8 @@ function scroll()
             inclination: 1.67 * (Math.PI/180),
             orbitalIrregularity: .0935,
             SMA: 227939100,
+            texture: 'jupitermap.jpg',
+            bump: 'jupiterbump.jpg',
             moons: [],
             rings: []
         }, 
@@ -356,6 +366,8 @@ function scroll()
             inclination: .32 * (Math.PI/180),
             orbitalIrregularity: .048775,
             SMA: 778547200,
+            texture: 'saturnmap.jpg',
+            bump: 'saturnbump.jpg',
             rings:
             [
                 {
@@ -488,6 +500,8 @@ function scroll()
             inclination: .93 * (Math.PI/180),
             orbitalIrregularity: .055723,
             SMA: 1433449370,
+            texture: 'uranusmap.jpg',
+            bump: 'uranusbump.jpg',
             rings:
             [
                 {
@@ -552,6 +566,8 @@ function scroll()
             inclination: 1.02 * (Math.PI/180),
             orbitalIrregularity: .04722,
             SMA: 2870671400,
+            texture: 'neptunemap.jpg',
+            bump: 'neptunebump.jpg',
             rings:
             [
                 {
@@ -680,12 +696,10 @@ function planet(planet, scale, emitting)
     
     var particles = new THREE.DodecahedronGeometry(planet.radius, 3),
         pMaterial = new THREE.MeshPhongMaterial({
-            map: THREE.ImageUtils.loadTexture('images/earthmap1k.jpg'),
+            map: THREE.ImageUtils.loadTexture(planet.texture),
             shading: THREE.SmoothShading,
-            bumpMap: THREE.ImageUtils.loadTexture('images/earthbump1k.jpg'),
-            bumpScale: .1,
-            specularMap: THREE.ImageUtils.loadTexture('images/earthspec1k.jpg'),
-            specular: 0x252525
+            bumpMap: THREE.ImageUtils.loadTexture(planet.bump),
+            bumpScale: .5,
         });
 
     // create the particle system
