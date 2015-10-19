@@ -15,7 +15,7 @@ var camera	= new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHei
 //		Comment								//
 //////////////////////////////////////////////////////////////////////////////////
 
-var spotLight	= new THREE.PointLight(0xFFAA88, 1, 10000000, 15);
+var spotLight	= new THREE.PointLight(0xFFAA88, 2, 10000000, 15);
 scene.add( spotLight );	
 
 var ambient = new THREE.AmbientLight(0xffffff);
