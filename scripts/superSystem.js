@@ -77,7 +77,7 @@ document.addEventListener('keydown', function(event){
 
 document.addEventListener('mousemove', function(event){
     mouse.x	= (event.clientX / window.innerWidth ) - 0.5
-    mouse.y	= (event.clientY / window.innerHeight) + 1
+    mouse.y	= (event.clientY / window.innerHeight) - .5 + Math.PI
 }, false);
 
 document.addEventListener('mousewheel', function(event){
@@ -90,8 +90,8 @@ document.addEventListener('mousewheel', function(event){
 
 onRenderFcts.push(function(delta, now){
     
-    var phi = Math.PI * mouse.y,
-        theta = Math.PI * 2 * mouse.x;
+    var phi = Math.PI/2 + mouse.y,
+        theta = Math.PI * mouse.x;
     
     if (focus.moon === 0)
     {
