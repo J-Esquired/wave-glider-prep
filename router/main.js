@@ -33,6 +33,9 @@ module.exports=function(app)
     });
 //    app.get(/.*\.(jpg|jpeg|png|mp4|mkvs)/, function(req, res) {
     app.get(/.*\./, function(req, res) {
+        if (req.originalUrl.indexOf('.css') !== -1) {
+            res.setHeader('content-type', 'text/css');
+        }
         res.send(fs.readFileSync(path.normalize(__dirname + "/../" + req.originalUrl)));
     });
     app.get(/.*/, function(req, res) {
