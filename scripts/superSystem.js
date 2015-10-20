@@ -721,11 +721,7 @@ function planet(planet, scale, emitting)
         moonMaterial = new THREE.MeshPhongMaterial({
             map: THREE.ImageUtils.loadTexture('images/planets/mad_moon.png'),
             shading: THREE.SmoothShading,
-<<<<<<< HEAD
-            bumpMap: THREE.ImageUtils.loadTexture('images/mad_moon_bump.png'),
-=======
-            bumpMap: THREE.ImageUtils.loadTexture('images/planets/moonbump4k.jpg'),
->>>>>>> f5287f4c5f583df2f28f74b69dd2bf2d91e74c31
+            bumpMap: THREE.ImageUtils.loadTexture('images/planets/mad_moon_bump.png'),
             bumpScale: .1
         });
 
