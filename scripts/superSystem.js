@@ -15,11 +15,11 @@ var camera	= new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHei
 //		Comment								//
 //////////////////////////////////////////////////////////////////////////////////
 
-var spotLight	= new THREE.PointLight(0xFFAA88, 2, 10000000, 15);
+var spotLight = new THREE.PointLight(0xFFAA88, 5, 10000000, 15);
 scene.add( spotLight );	
 
 var ambient = new THREE.AmbientLight(0xffffff);
-//scene.add(ambient);
+scene.add(ambient);
 
 onRenderFcts.push(function(){
     var angle	= Date.now()/1000 * Math.PI;
@@ -211,6 +211,8 @@ function scroll()
             SMA: 0,
             texture: 'sunmap.jpg',
             bump: 'sunmap.jpg',
+            specular: 'genericSpecularMap.jpg',
+            color: 0xffffff,
             moons: [],
             rings: []
         },
@@ -237,6 +239,8 @@ function scroll()
             SMA: 57909050,
             texture: 'mercurymap.jpg',
             bump: 'mercurybump.jpg',
+            specular: 'genericSpecularMap.jpg',
+            color: 0x303030,
             moons: [],
             rings: []
         }, 
@@ -263,6 +267,8 @@ function scroll()
             SMA: 108208000,
             texture: 'venusmap.jpg',
             bump: 'venusbump.jpg',
+            specular: 'genericSpecularMap.jpg',
+            color: 0x303030,
             moons: [],
             rings: []
         }, 
@@ -289,6 +295,8 @@ function scroll()
             SMA: 149598261,
             texture: 'earthmap1k.jpg',
             bump: 'earthbump1k.jpg',
+            specular: 'earthspec1k.jpg',
+            color: 0x303030,
             moons:
             [
                 {
@@ -338,6 +346,8 @@ function scroll()
             SMA: 227939100,
             texture: 'mars_1k_color.jpg',
             bump: 'mars_1k_topo.jpg',
+            specular: 'genericSpecularMap.jpg',
+            color: 0x303030,
             moons: [],
             rings: []
         }, 
@@ -364,6 +374,8 @@ function scroll()
             SMA: 778547200,
             texture: 'jupitermap.jpg',
             bump: 'jupiterbump.jpg',
+            specular: 'genericSpecularMap.jpg',
+            color: 0x303030,
             rings:
             [
                 {
@@ -498,6 +510,8 @@ function scroll()
             SMA: 1433449370,
             texture: 'saturnmap.jpg',
             bump: 'saturnbump.jpg',
+            specular: 'genericSpecularMap.jpg',
+            color: 0x303030,
             rings:
             [
                 {
@@ -564,6 +578,8 @@ function scroll()
             SMA: 2870671400,
             texture: 'uranusmap.jpg',
             bump: 'uranusbump.jpg',
+            specular: 'genericSpecularMap.jpg',
+            color: 0x303030,
             rings:
             [
                 {
@@ -641,6 +657,8 @@ function scroll()
             SMA: 4498542600,
             texture: 'neptunemap.jpg',
             bump: 'neptunebump.jpg',
+            specular: 'genericSpecularMap.jpg',
+            color: 0x303030,
             rings:
             [
                 {
@@ -684,6 +702,7 @@ function solarSystem(planets, scale)
     {
         planet(planets[i], scale, i === 0);
     }
+    spotLight.distance = planets[planets.length - 1].SMA * 40;
     mouse.scroll = planets[focus.planet].radius * 10;
 }
 
@@ -698,8 +717,8 @@ function planet(planet, scale, emitting)
             shading: THREE.SmoothShading,
             bumpMap: THREE.ImageUtils.loadTexture('images/planets/' + planet.bump),
             bumpScale: .5,
-            specularMap: THREE.ImageUtils.loadTexture('images/planets/genericSpecularMap.jpg'),
-            ambient: 0xffffff
+            specularMap: THREE.ImageUtils.loadTexture('images/planets/' + planet.specular),
+            color: planet.color
         });
 
     // create the particle system
