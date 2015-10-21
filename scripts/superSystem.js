@@ -15,7 +15,7 @@ var camera	= new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHei
 //		Comment								//
 //////////////////////////////////////////////////////////////////////////////////
 
-var spotLight = new THREE.PointLight(0xFFAA88, 5, 10000000, 15);
+var spotLight = new THREE.PointLight(0xFFAA88, 10, 10000000, 15);
 scene.add( spotLight );	
 
 var ambient = new THREE.AmbientLight(0xffffff);
@@ -202,7 +202,6 @@ function scroll()
                 z: 0
             },
             radius: 696300,
-            color: 0xffe700,
             axialTilt: 0,
             orbitalTime: 100000,
             rotationTime: 100000,
@@ -240,7 +239,7 @@ function scroll()
             texture: 'mercurymap.jpg',
             bump: 'mercurybump.jpg',
             specular: 'genericSpecularMap.jpg',
-            color: 0x303030,
+            color: 0x202020,
             moons: [],
             rings: []
         }, 
@@ -268,7 +267,7 @@ function scroll()
             texture: 'venusmap.jpg',
             bump: 'venusbump.jpg',
             specular: 'genericSpecularMap.jpg',
-            color: 0x303030,
+            color: 0x202020,
             moons: [],
             rings: []
         }, 
@@ -296,7 +295,7 @@ function scroll()
             texture: 'earthmap1k.jpg',
             bump: 'earthbump1k.jpg',
             specular: 'earthspec1k.jpg',
-            color: 0x303030,
+            color: 0x202020,
             moons:
             [
                 {
@@ -313,11 +312,12 @@ function scroll()
                         z: 0
                     },
                     radius: 1737.1,
-                    color: 0x808080,
                     orbitalTime: 27.32,
                     inclination: 3.5 * (Math.PI/180),
                     orbitalIrregularity: .0167,
                     SMA: 384399,
+                    specular: 'genericSpecularMap.jpg',
+                    color: 0x202020,
                     system: 0
                 }
             ],
@@ -337,7 +337,6 @@ function scroll()
                 z: 0
             },
             radius: 3389.5,
-            color: 0xb23e00,
             axialTilt: 25.19 * (Math.PI/180),
             orbitalTime: 686.971,
             rotationTime: 1 + (2/3)/24,
@@ -347,7 +346,7 @@ function scroll()
             texture: 'mars_1k_color.jpg',
             bump: 'mars_1k_topo.jpg',
             specular: 'genericSpecularMap.jpg',
-            color: 0x303030,
+            color: 0x202020,
             moons: [],
             rings: []
         }, 
@@ -375,7 +374,7 @@ function scroll()
             texture: 'jupitermap.jpg',
             bump: 'jupiterbump.jpg',
             specular: 'genericSpecularMap.jpg',
-            color: 0x303030,
+            color: 0x202020,
             rings:
             [
                 {
@@ -415,7 +414,8 @@ function scroll()
                         z: 0
                     },
                     radius: 2631,
-                    color: 0xb8b8b8,
+                    specular: 'genericSpecularMap.jpg',
+                    color: 0x202020,
                     orbitalTime: 7.1546,
                     inclination: .204 * (Math.PI/180),
                     orbitalIrregularity: .0011,
@@ -436,7 +436,8 @@ function scroll()
                         z: 0
                     },
                     radius: 2410.3,
-                    color: 0x928371,
+                    specular: 'genericSpecularMap.jpg',
+                    color: 0x202020,
                     orbitalTime: 16.689,
                     inclination: .205 * (Math.PI/180),
                     orbitalIrregularity: .0074,
@@ -457,7 +458,8 @@ function scroll()
                         z: 0
                     },
                     radius: 1825,
-                    color: 0xfad354,
+                    specular: 'genericSpecularMap.jpg',
+                    color: 0x202020,
                     orbitalTime: 1.769,
                     inclination: .05 * (Math.PI/180),
                     orbitalIrregularity: .0041,
@@ -478,7 +480,8 @@ function scroll()
                         z: 0
                     },
                     radius: 1560.8,
-                    color: 0x9d7e60,
+                    specular: 'genericSpecularMap.jpg',
+                    color: 0x202020,
                     orbitalTime: 3.5512,
                     inclination: .471 * (Math.PI/180),
                     orbitalIrregularity: .0094,
@@ -511,7 +514,7 @@ function scroll()
             texture: 'saturnmap.jpg',
             bump: 'saturnbump.jpg',
             specular: 'genericSpecularMap.jpg',
-            color: 0x303030,
+            color: 0x202020,
             rings:
             [
                 {
@@ -546,7 +549,8 @@ function scroll()
                         z: 0
                     },
                     radius: 2575,
-                    color: 0xfad354,
+                    specular: 'genericSpecularMap.jpg',
+                    color: 0x202020,
                     orbitalTime: 15.945,
                     inclination: .3485 * (Math.PI/180),
                     orbitalIrregularity: .0288,
@@ -579,7 +583,7 @@ function scroll()
             texture: 'uranusmap.jpg',
             bump: 'uranusbump.jpg',
             specular: 'genericSpecularMap.jpg',
-            color: 0x303030,
+            color: 0x202020,
             rings:
             [
                 {
@@ -604,7 +608,8 @@ function scroll()
                         z: 0
                     },
                     radius: 788.4,
-                    color: 0xb2b2b2,
+                    specular: 'genericSpecularMap.jpg',
+                    color: 0x202020,
                     orbitalTime: 8.705,
                     inclination: .340 * (Math.PI/180),
                     orbitalIrregularity: .0011,
@@ -625,7 +630,8 @@ function scroll()
                         z: 0
                     },
                     radius: 761.4,
-                    color: 0xb2b2b2,
+                    specular: 'genericSpecularMap.jpg',
+                    color: 0x202020,
                     orbitalTime: 13.463,
                     inclination: .058 * (Math.PI/180),
                     orbitalIrregularity: .0014,
@@ -648,7 +654,6 @@ function scroll()
                 z: 0
             },
             radius: 24622,
-            color: 0x4c4cff,
             axialTilt: 28.32 * (Math.PI/180),
             orbitalTime: 60190,
             rotationTime: (16 + (6/60))/24,
@@ -658,7 +663,7 @@ function scroll()
             texture: 'neptunemap.jpg',
             bump: 'neptunebump.jpg',
             specular: 'genericSpecularMap.jpg',
-            color: 0x303030,
+            color: 0x202020,
             rings:
             [
                 {
@@ -683,7 +688,8 @@ function scroll()
                         z: 0
                     },
                     radius: 1352.6,
-                    color: 0xb2b2b2,
+                    specular: 'genericSpecularMap.jpg',
+                    color: 0x202020,
                     orbitalTime: 5.877,
                     inclination: 23.135 * (Math.PI/180),
                     orbitalIrregularity: 0,
@@ -741,7 +747,9 @@ function planet(planet, scale, emitting)
             map: THREE.ImageUtils.loadTexture('images/planets/mad_moon.png'),
             shading: THREE.SmoothShading,
             bumpMap: THREE.ImageUtils.loadTexture('images/planets/mad_moon_bump.png'),
-            bumpScale: .1
+            bumpScale: .1,
+            specularMap: THREE.ImageUtils.loadTexture('images/planets/' + planet.specular),
+            color: planet.moons[j].color
         });
 
         var moonSystem = new THREE.Mesh(moonParticles, moonMaterial);
