@@ -105,8 +105,8 @@ onRenderFcts.push(function(delta, now){
         camera.lookAt( new THREE.Vector3(planets[focus.planet].cartesian.x, planets[focus.planet].cartesian.z, planets[focus.planet].cartesian.y) );
     }
     else
-    {
-        theta -= cameraAngle + Math.PI - planets[focus.planet].moons[focus.moon - 1].spherical.theta;
+    {   
+        theta -= cameraAngle + Math.PI - Math.atan2(planets[focus.planet].moons[focus.moon - 1].cartesian.y, planets[focus.planet].moons[focus.moon - 1].cartesian.x);
         
         camera.position.x = planets[focus.planet].moons[focus.moon - 1].cartesian.x + mouse.scroll*Math.cos(theta)*Math.sin(phi);
         camera.position.z = planets[focus.planet].moons[focus.moon - 1].cartesian.y + mouse.scroll*Math.sin(theta)*Math.sin(phi);
@@ -753,7 +753,7 @@ function planet(planet, scale, emitting)
             shading: THREE.SmoothShading,
             bumpMap: THREE.ImageUtils.loadTexture('images/planets/mad_moon_bump.png'),
             bumpScale: .1,
-            specularMap: THREE.ImageUtils.loadTexture('images/planets/' + planet.specular),
+            specularMap: THREE.ImageUtils.loadTexture('images/planets/genericSpecularMap.jpg'),
             color: planet.moons[j].color
         });
 
