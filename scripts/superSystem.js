@@ -90,11 +90,14 @@ document.addEventListener('mousewheel', function(event){
 
 onRenderFcts.push(function(delta, now){
     
-    var phi = Math.PI/2 + mouse.y,
-        theta = Math.PI * mouse.x;
+    var cameraAngle = 3 * Math.PI / 4,
+        phi = Math.PI/2 + mouse.y,
+        theta = (Math.PI * mouse.x);
     
     if (focus.moon === 0)
     {
+        theta -= cameraAngle + Math.PI - planets[focus.planet].spherical.theta;
+        
         camera.position.x = planets[focus.planet].cartesian.x + mouse.scroll*Math.cos(theta)*Math.sin(phi);
         camera.position.z = planets[focus.planet].cartesian.y + mouse.scroll*Math.sin(theta)*Math.sin(phi);
         camera.position.y = planets[focus.planet].cartesian.z + mouse.scroll*Math.cos(phi);
@@ -103,6 +106,8 @@ onRenderFcts.push(function(delta, now){
     }
     else
     {
+        theta -= cameraAngle + Math.PI - planets[focus.planet].moons[focus.moons - 1].spherical.theta;
+        
         camera.position.x = planets[focus.planet].moons[focus.moon - 1].cartesian.x + mouse.scroll*Math.cos(theta)*Math.sin(phi);
         camera.position.z = planets[focus.planet].moons[focus.moon - 1].cartesian.y + mouse.scroll*Math.sin(theta)*Math.sin(phi);
         camera.position.y = planets[focus.planet].moons[focus.moon - 1].cartesian.z + mouse.scroll*Math.cos(phi);
