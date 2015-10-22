@@ -106,7 +106,7 @@ onRenderFcts.push(function(delta, now){
     }
     else
     {
-        theta -= cameraAngle + Math.PI - planets[focus.planet].moons[focus.moons - 1].spherical.theta;
+        theta -= cameraAngle + Math.PI - planets[focus.planet].moons[focus.moon - 1].spherical.theta;
         
         camera.position.x = planets[focus.planet].moons[focus.moon - 1].cartesian.x + mouse.scroll*Math.cos(theta)*Math.sin(phi);
         camera.position.z = planets[focus.planet].moons[focus.moon - 1].cartesian.y + mouse.scroll*Math.sin(theta)*Math.sin(phi);
