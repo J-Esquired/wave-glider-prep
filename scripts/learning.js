@@ -14,7 +14,7 @@ var camera	= new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHei
 //////////////////////////////////////////////////////////////////////////////////
 //		Comment								//
 //////////////////////////////////////////////////////////////////////////////////
-var ambient	= new THREE.AmbientLight( 0x444444 );
+var ambient	= new THREE.AmbientLight( 0xffffff );
 scene.add( ambient );
 
 var spotLight	= new THREE.SpotLight( 0xFFAA88 );
@@ -31,25 +31,36 @@ scene.add( spotLight );
 onRenderFcts.push(function(){
     var angle	= Date.now()/1000 * Math.PI;
 // angle	= Math.PI*2
-    spotLight.position.x	= Math.cos(angle*0.1)*200;
-    spotLight.position.y	= 100 + Math.sin(angle*0.5)*200;
-    spotLight.position.z	= Math.sin(angle*0.1)*200;		
+    spotLight.position.x	= Math.cos(angle*0.1)*500;
+    spotLight.position.y	= 500 + Math.sin(angle*0.5)*500;
+    spotLight.position.z	= Math.sin(angle*0.1)*500;		
 })
 //////////////////////////////////////////////////////////////////////////////////
 //		stuff								//
 //////////////////////////////////////////////////////////////////////////////////
+function arrayRange(array, index) {
+    var max = array[0][index],
+        min = array[0][index];
+    for (var i = 0; i < array.length; i++) {
+        max = Math.max(max, array[i][0]);
+        min = Math.min(min, array[i][0]);
+    }
+    return max - min;
+}
 var arrayX = [0],
     arrayY = [0],
-    arrayZ = [0];
+    arrayZ = [0],
+    array = [0];
 
-for (var i = 0; i < 10000; i++)
+for (var i = 0; i < 10; i++)
 {
     arrayX[i] = Math.random() * 500;
     arrayY[i] = Math.random() * 500;
     arrayZ[i] = Math.random() * 500;
+    array[i] = [arrayX[i], arrayY[i], arrayZ[i]];
 }
 
-graph2(arrayX, arrayY, arrayZ);
+graph1(array);
 
 //////////////////////////////////////////////////////////////////////////////////
 //		Camera Controls							//
@@ -178,28 +189,45 @@ function graph1(pointArray)
     
     var particleCount = pointArray.length,
         particles = new THREE.Geometry(),
-        pMaterial = new THREE.PointCloudMaterial({
+        pMaterial = new THREE.MeshPhongMaterial({
             side: THREE.DoubleSide,
             color: 0x909090,
             shading: THREE.SmoothShading
-        });
+        }),
+        rows = Math.floor(Math.sqrt(particleCount));
+    
+    pointArray.sort(function(a,b){
+        var range = arrayRange(pointArray, 0),
+            domain = arrayRange(pointArray, 1);
+        return (Math.floor(range/a[0]) === Math.floor(range/b[0])) ? ((Math.floor(domain/a[1]) === Math.floor(domain/b[1])) ? a[2] - b[2] : a[1] - b[1]) : a[0] - b[0];
+    });
     
     // now create the individual particles
     for (var p = 0; p < particleCount; p++) {
-
         
-        var point = pointArray[p],
+        var row = Math.floor(p/rows),
+            col = p%rows,
+            point = pointArray[p],
             particle = new THREE.Vector3(point[0], point[1], point[2]);
 
         // add it to the geometry
         particles.vertices.push(particle);
+        
+        if (row != 0 && col != 0)
+        {
+            particles.faces.push( new THREE.Face3( col * rows + row, col * rows + row - 1, (col - 1) * rows + row) );
+            particles.faces.push( new THREE.Face3( (col - 1) * rows + row, col * rows + row - 1, (col - 1) * rows + row - 1) );
+        }
     }
+    
+    particles.computeFaceNormals();
 
     // create the particle system
-    var particleSystem = new THREE.PointCloud(
+    var particleSystem = new THREE.Mesh(
         particles,
         pMaterial);
-
+    particleSystem.castShadow = true;
+    particleSystem.receiveShadow = true;
     // add it to the scene
     scene.add(particleSystem);
 
