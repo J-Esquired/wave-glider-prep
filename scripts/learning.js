@@ -4,8 +4,8 @@ var renderer	= new THREE.WebGLRenderer({
 renderer.setSize( window.innerWidth, window.innerHeight);
 document.body.appendChild( renderer.domElement );
 
-renderer.shadowMapEnabled	= true;
-renderer.shadowMapType 		= THREE.PCFSoftShadowMap;
+renderer.shadowMap.enabled	= true;
+renderer.shadowMap.type 	= THREE.PCFSoftShadowMap;
 
 var onRenderFcts= [];
 var scene	= new THREE.Scene();
@@ -38,6 +38,7 @@ onRenderFcts.push(function(){
 //////////////////////////////////////////////////////////////////////////////////
 //		stuff								//
 //////////////////////////////////////////////////////////////////////////////////
+<<<<<<< HEAD
 var arrayX = [0],
     arrayY = [0],
     arrayZ = [0];
@@ -50,19 +51,42 @@ for (var i = 0; i < 10000; i++)
 }
 
 graph2(arrayX, arrayY, arrayZ);
+=======
+var arrayX = [0];
+var arrayY = [0];
+
+for (var i = 0; i < 100; i++)
+{
+    arrayX[i] = i*i/10000;
+    arrayY[i] = 25*Math.sin(i*Math.PI/10);
+}
+
+graph(arrayX, arrayY);
+>>>>>>> d88e6d15f7103628d82eabc87831290d30ccebaa
 
 //////////////////////////////////////////////////////////////////////////////////
 //		Camera Controls							//
 //////////////////////////////////////////////////////////////////////////////////
+<<<<<<< HEAD
 var mouse	= {x : 0, y : 0, startX : 0, startY : 0, tempX : 0, tempY : 0, scroll : 10000, isDown: false}
+=======
+var mouse	= {x : 0, y : 0, tempX : 0, tempY : 0, startX : 0, startY : 0, scroll : 10000, isDown: false}
+>>>>>>> d88e6d15f7103628d82eabc87831290d30ccebaa
 
 document.addEventListener('mousedown', function(event)
 {
     mouse.isDown = true;
+<<<<<<< HEAD
     mouse.startX = (event.clientX / window.innerWidth );
     mouse.startY = (event.clientY / window.innerHeight);
     mouse.tempX  = mouse.x;
     mouse.tempY  = mouse.y;
+=======
+    mouse.tempX  = mouse.x;
+    mouse.tempY  = mouse.y;
+    mouse.startX = (event.clientX / window.innerWidth ) - 0.5;
+    mouse.startY = (event.clientY / window.innerHeight) + 0.5;
+>>>>>>> d88e6d15f7103628d82eabc87831290d30ccebaa
 }, false)
 document.addEventListener('mouseup', function(event){mouse.isDown = false}, false)
                           
@@ -70,8 +94,14 @@ document.addEventListener('mousemove', function(event)
 {
     if (mouse.isDown)
     {
+<<<<<<< HEAD
         mouse.x	= mouse.tempX + (event.clientX / window.innerWidth ) - mouse.startX;
         mouse.y	= mouse.tempY - (event.clientY / window.innerHeight) + mouse.startY;
+=======
+        mouse.x	= ((event.clientX / window.innerWidth ) - 0.5) - mouse.startX + mouse.tempX;
+        mouse.y	= ((event.clientY / window.innerHeight) + 0.5) - mouse.startY + mouse.tempY;
+        
+>>>>>>> d88e6d15f7103628d82eabc87831290d30ccebaa
     }
 }, false)
 document.addEventListener('mousewheel', function(event)
@@ -90,8 +120,12 @@ onRenderFcts.push(function(delta, now){
         pX = mouse.scroll*Math.cos(theta)*Math.sin(phi),
         pY= mouse.scroll*Math.sin(theta)*Math.sin(phi),
         pZ = mouse.scroll*Math.cos(phi);
+<<<<<<< HEAD
     console.log(pX + " :: " + pY + " :: " + pZ);
     
+=======
+            
+>>>>>>> d88e6d15f7103628d82eabc87831290d30ccebaa
     camera.position.x = pX;
     camera.position.y = pZ;
     camera.position.z = pY;
@@ -136,7 +170,10 @@ function graph(array1, array2)
         particles = new THREE.Geometry(),
         pMaterial = new THREE.MeshPhongMaterial({
             side: THREE.DoubleSide,
+<<<<<<< HEAD
             color: 0xff00ff,
+=======
+>>>>>>> d88e6d15f7103628d82eabc87831290d30ccebaa
             shading: THREE.SmoothShading
         });
     
@@ -181,9 +218,14 @@ function graph1(pointArray)
     
     var particleCount = pointArray.length,
         particles = new THREE.Geometry(),
+<<<<<<< HEAD
         pMaterial = new THREE.PointCloudMaterial({
             side: THREE.DoubleSide,
             color: 0x909090,
+=======
+        pMaterial = new THREE.MeshPhongMaterial({
+            color: 0xffffff,
+>>>>>>> d88e6d15f7103628d82eabc87831290d30ccebaa
             shading: THREE.SmoothShading
         });
     
@@ -199,6 +241,7 @@ function graph1(pointArray)
     }
 
     // create the particle system
+<<<<<<< HEAD
     var particleSystem = new THREE.PointCloud(
         particles,
         pMaterial);
@@ -234,6 +277,9 @@ function graph2(arrayX, arrayY, arrayZ)
 
     // create the particle system
     var particleSystem = new THREE.PointCloud(
+=======
+    var particleSystem = new THREE.mesh(
+>>>>>>> d88e6d15f7103628d82eabc87831290d30ccebaa
         particles,
         pMaterial);
 
