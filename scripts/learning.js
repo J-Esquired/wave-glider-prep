@@ -18,7 +18,7 @@ var ambient	= new THREE.AmbientLight( 0x444444 );
 scene.add( ambient );
 
 var spotLight	= new THREE.SpotLight( 0xFFAA88 );
-spotLight.target.position.set( 0, 2, 0 );
+spotLight.lookAt( 0, 0, 0 );
 spotLight.shadowCameraNear	= 0.01;		
 spotLight.castShadow		= true;
 spotLight.shadowDarkness	= 0.5;
@@ -26,73 +26,52 @@ spotLight.shadowCameraVisible	= true;
 // console.dir(spotLight)
 // spotLight.shadowMapWidth	= 1024;
 // spotLight.shadowMapHeight	= 1024;
-//scene.add( spotLight );	
+scene.add( spotLight );	
 
 onRenderFcts.push(function(){
     var angle	= Date.now()/1000 * Math.PI;
 // angle	= Math.PI*2
-    spotLight.position.x	= Math.cos(angle*-0.1)*200;
-    //spotLight.position.y	= 100 + Math.sin(angle*0.5)*200;
-    spotLight.position.z	= Math.sin(angle*-0.1)*200;		
+    spotLight.position.x	= Math.cos(angle*0.1)*200;
+    spotLight.position.y	= 100 + Math.sin(angle*0.5)*200;
+    spotLight.position.z	= Math.sin(angle*0.1)*200;		
 })
 //////////////////////////////////////////////////////////////////////////////////
 //		stuff								//
 //////////////////////////////////////////////////////////////////////////////////
+var arrayX = [0],
+    arrayY = [0],
+    arrayZ = [0];
 
-var geometry	= new THREE.DodecahedronGeometry(5, 5);
-var material	= new THREE.MeshPhongMaterial({
-    ambient		: 0x444444,
-    color		: 0x8844AA,
-    shininess	: 300, 
-    specular	: 0x33AA33,
-    shading		: THREE.SmoothShading
-});
-var torusKnot	= new THREE.Mesh( geometry, material );
-torusKnot.position.y		= 4;
-//scene.add( torusKnot );
-
-onRenderFcts.push(function(){
-    var angle	= Date.now()/1000 * Math.PI;
-// angle	= Math.PI*2
-    torusKnot.position.x	= Math.cos(angle)*50;
-    torusKnot.position.z	= Math.sin(angle*-0.7)*50;	
-    torusKnot.position.y    = 15 + Math.cos(angle*.5)*10
-})
-
-
-torusKnot.castShadow    = true;
-torusKnot.receiveShadow	= true;
-
-var arrayX = [0];
-var arrayY = [0];
-
-for (var i = 0; i < 100; i++)
+for (var i = 0; i < 10000; i++)
 {
-    arrayX[i] = i*i/10000;
-    arrayY[i] = 25*Math.sin(i*Math.PI/10);
+    arrayX[i] = Math.random() * 500;
+    arrayY[i] = Math.random() * 500;
+    arrayZ[i] = Math.random() * 500;
 }
 
-function inputFunction1(num1, num2) {
-    return 200*(1)*Math.sin(num1/80)*Math.sin(num2/125);
-}
-
-//graphFunction(inputFunction1);
-graphFunction2("x**2 + y**2 + z**2 - 100**2", 200, 200, 10000);
+graph2(arrayX, arrayY, arrayZ);
 
 //////////////////////////////////////////////////////////////////////////////////
 //		Camera Controls							//
 //////////////////////////////////////////////////////////////////////////////////
-var mouse	= {x : 0, y : 0, scroll : 10000, isDown: false}
+var mouse	= {x : 0, y : 0, startX : 0, startY : 0, tempX : 0, tempY : 0, scroll : 10000, isDown: false}
 
-document.addEventListener('mousedown', function(event){mouse.isDown = true}, false)
+document.addEventListener('mousedown', function(event)
+{
+    mouse.isDown = true;
+    mouse.startX = (event.clientX / window.innerWidth );
+    mouse.startY = (event.clientY / window.innerHeight);
+    mouse.tempX  = mouse.x;
+    mouse.tempY  = mouse.y;
+}, false)
 document.addEventListener('mouseup', function(event){mouse.isDown = false}, false)
                           
 document.addEventListener('mousemove', function(event)
 {
     if (mouse.isDown)
     {
-        mouse.x	= (event.clientX / window.innerWidth ) - 0.5
-        mouse.y	= (event.clientY / window.innerHeight) + 0.5
+        mouse.x	= mouse.tempX + (event.clientX / window.innerWidth ) - mouse.startX;
+        mouse.y	= mouse.tempY - (event.clientY / window.innerHeight) + mouse.startY;
     }
 }, false)
 document.addEventListener('mousewheel', function(event)
@@ -105,16 +84,17 @@ document.addEventListener('mousewheel', function(event)
 }, false);
 onRenderFcts.push(function(delta, now){
 
-    var phi = Math.PI*(.5 + mouse.y),
-        theta = 2*Math.PI*(.5 + mouse.x),
+   // console.log(mouse.x + " :: " + mouse.y);
+    var phi = Math.PI*(mouse.y),
+        theta = 2*Math.PI*(mouse.x),
         pX = mouse.scroll*Math.cos(theta)*Math.sin(phi),
         pY= mouse.scroll*Math.sin(theta)*Math.sin(phi),
         pZ = mouse.scroll*Math.cos(phi);
-            
-    camera.position.x = pX;//-mouse.scroll*Math.cos(mouse.x*(2*Math.PI));
-    camera.position.y = pZ;//mouse.scroll*Math.cos(mouse.y*(Math.PI));
+    console.log(pX + " :: " + pY + " :: " + pZ);
     
-    camera.position.z = pY;//mouse.scroll*Math.cos(mouse.x*(2*Math.PI))*Math.cos(mouse.y*(Math.PI));
+    camera.position.x = pX;
+    camera.position.y = pZ;
+    camera.position.z = pY;
 
     camera.lookAt( scene.position );
 })
@@ -154,30 +134,36 @@ function graph(array1, array2)
     
     var particleCount = array1.length*array2.length,
         particles = new THREE.Geometry(),
-        pMaterial = new THREE.ParticleBasicMaterial({
-          size: 5,
-          map: THREE.ImageUtils.loadTexture(
-            "images/particle.png"
-          ),
-          blending: THREE.AdditiveBlending,
-          transparent: false
+        pMaterial = new THREE.MeshPhongMaterial({
+            side: THREE.DoubleSide,
+            color: 0xff00ff,
+            shading: THREE.SmoothShading
         });
     
     // now create the individual particles
     for (var p = 0; p < particleCount; p++) {
 
         
-        var pX = 2*(p%array1.length) - array1.length,
-            pY = 2*Math.floor(p/array1.length) - array2.length,
-            pZ = (array1[(pX + array1.length)/2])*(array2[(pY + array2.length)/2]),
+        var row = (p%array1.length),
+            col = Math.floor(p/array1.length),
+            pX = 2*row - array1.length,
+            pY = 2*col - array2.length,
+            pZ = (array1[row])*(array2[col]),
             particle = new THREE.Vector3(pX, pZ, pY);
 
         // add it to the geometry
         particles.vertices.push(particle);
+        if (row != 0 && col != 0)
+        {
+            particles.faces.push( new THREE.Face3( col * array1.length + row, col * array1.length + row - 1, (col - 1) * array1.length + row) );
+            particles.faces.push( new THREE.Face3( (col - 1) * array1.length + row, col * array1.length + row - 1, (col - 1) * array1.length + row - 1) );
+        }
     }
+    
+    particles.computeFaceNormals();
 
     // create the particle system
-    var particleSystem = new THREE.ParticleSystem(
+    var particleSystem = new THREE.Mesh(
         particles,
         pMaterial);
 
@@ -187,82 +173,75 @@ function graph(array1, array2)
     onRenderFcts.push(function(){
         var angle	= Date.now()/10000 * Math.PI;
         particleSystem.rotation.y	= angle;		
-    })
+    });
 }
 
-function graphFunction(inputFunction)
+function graph1(pointArray)
 {
-    var particleCount = 1000,
+    
+    var particleCount = pointArray.length,
         particles = new THREE.Geometry(),
-        pMaterial = new THREE.ParticleBasicMaterial({
-          size: 5,
-          map: THREE.ImageUtils.loadTexture(
-            "images/particle.png"
-          ),
-          blending: THREE.AdditiveBlending,
-          transparent: false
+        pMaterial = new THREE.PointCloudMaterial({
+            side: THREE.DoubleSide,
+            color: 0x909090,
+            shading: THREE.SmoothShading
         });
     
     // now create the individual particles
     for (var p = 0; p < particleCount; p++) {
 
         
-        var pX = 500 - 5*Math.floor(p/200),
-            pY = 500 - 5*(p%200),
-            pZ = inputFunction(pX,pY),
-            particle = new THREE.Vector3(pX, pZ, pY);
+        var point = pointArray[p],
+            particle = new THREE.Vector3(point[0], point[1], point[2]);
 
         // add it to the geometry
         particles.vertices.push(particle);
     }
 
     // create the particle system
-    var particleSystem = new THREE.ParticleSystem(
+    var particleSystem = new THREE.PointCloud(
         particles,
         pMaterial);
 
     // add it to the scene
     scene.add(particleSystem);
+
+    onRenderFcts.push(function(){
+        var angle	= Date.now()/10000 * Math.PI;
+        particleSystem.rotation.y	= angle;		
+    });
 }
 
-function parseSqrt(input)
+function graph2(arrayX, arrayY, arrayZ)
 {
-    input = input.replace(/sqrt/g,'Math.sqrt');
-    return input;
-}
-
-function graphFunction2(inputFunction, domain, range, particleCount)
-{
-    var eqn = CQ(inputFunction).solve("z"),
+    
+    var particleCount = arrayX.length,
         particles = new THREE.Geometry(),
-        pMaterial = new THREE.ParticleBasicMaterial({
-          size: 1,
-          vertexColors: THREE.VertexColors
+        pMaterial = new THREE.PointCloudMaterial({
+            color: 0x909090,
+            shading: THREE.SmoothShading
         });
     
     // now create the individual particles
     for (var p = 0; p < particleCount; p++) {
+
         
-        var eIndex = p % eqn.length,
-            f = eqn[eIndex].toFunction('x', 'y'),
-            pX = domain*(Math.random() - .5),
-            pY = range*(Math.random() - .5),
-            pZ = eval(parseSqrt(f(pX, pY).toString())),
-            particle = new THREE.Vector3(pX, pZ, pY);
+        var particle = new THREE.Vector3(arrayX[p], arrayY[p], arrayZ[p]);
 
         // add it to the geometry
-        if (!isNaN(pZ))
-        {
-            particles.colors.push( new THREE.Color(0xffffff).setRGB(Math.random(), Math.random(), Math.random()));
-            particles.vertices.push(particle);
-        }
+        particles.vertices.push(particle);
     }
 
     // create the particle system
-    var particleSystem = new THREE.ParticleSystem(
+    var particleSystem = new THREE.PointCloud(
         particles,
         pMaterial);
 
     // add it to the scene
     scene.add(particleSystem);
+
+    onRenderFcts.push(function(){
+        var angle	= Date.now()/10000 * Math.PI;
+        particleSystem.rotation.y	= angle;		
+    });
 }
