@@ -377,7 +377,7 @@ function scroll()
             orbitalIrregularity: .048775,
             SMA: 778547200,
             texture: 'jupitermap.jpg',
-            bump: 'jupiterbump.jpg',
+            bump: 'plutobump2k.jpg',
             specular: 'genericSpecularMap.jpg',
             color: 0x202020,
             rings:
@@ -517,7 +517,7 @@ function scroll()
             orbitalIrregularity: .055723,
             SMA: 1433449370,
             texture: 'saturnmap.jpg',
-            bump: 'saturnbump.jpg',
+            bump: 'plutobump2k.jpg',
             specular: 'genericSpecularMap.jpg',
             color: 0x202020,
             rings:
@@ -586,7 +586,7 @@ function scroll()
             orbitalIrregularity: .04722,
             SMA: 2870671400,
             texture: 'uranusmap.jpg',
-            bump: 'uranusbump.jpg',
+            bump: 'plutobump2k.jpg',
             specular: 'genericSpecularMap.jpg',
             color: 0x202020,
             rings:
@@ -666,7 +666,7 @@ function scroll()
             orbitalIrregularity: .00868,
             SMA: 4498542600,
             texture: 'neptunemap.jpg',
-            bump: 'neptunebump.jpg',
+            bump: 'plutobump2k.jpg',
             specular: 'genericSpecularMap.jpg',
             color: 0x202020,
             rings:
