@@ -2,6 +2,7 @@ var renderer	= new THREE.WebGLRenderer({
     antialias	: true
 });
 renderer.setSize( window.innerWidth, window.innerHeight);
+renderer.domElement.id = "canvas";
 document.body.appendChild( renderer.domElement );
 
 renderer.shadowMap.enabled = true;
@@ -32,7 +33,8 @@ onRenderFcts.push(function(){
 var focus = {planet: 0, moon: 0};
 var mouse	= {x : 0, y : 0, scroll : 0};
 
-document.addEventListener('keydown', function(event){
+// document.addEventListener('keydown', function(event){
+renderer.domElement.addEventListener('keydown', function(event){
     console.log(event.keyCode);
     if (event.keyCode === 68 || event.keyCode === 39)
     {
