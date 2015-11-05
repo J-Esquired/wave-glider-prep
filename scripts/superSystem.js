@@ -34,7 +34,7 @@ var focus = {planet: 0, moon: 0};
 var mouse	= {x : 0, y : 0, scroll : 0};
 var listenerDiv = document.getElementById('cheats');
 
- listenerDiv.addEventListener('keydown', function(event){
+ document.addEventListener('keydown', function(event){
 //renderer.domElement.addEventListener('keydown', function(event){
     console.log(event.keyCode);
     if (event.keyCode === 68 || event.keyCode === 39)
