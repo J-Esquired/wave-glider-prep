@@ -32,8 +32,9 @@ onRenderFcts.push(function(){
 //////////////////////////////////////////////////////////////////////////////////
 var focus = {planet: 0, moon: 0};
 var mouse	= {x : 0, y : 0, scroll : 0};
+var listenerDiv = document.getElementById('cheats');
 
- document.addEventListener('keydown', function(event){
+ listenerDiv.addEventListener('keydown', function(event){
 //renderer.domElement.addEventListener('keydown', function(event){
     console.log(event.keyCode);
     if (event.keyCode === 68 || event.keyCode === 39)
@@ -77,12 +78,12 @@ var mouse	= {x : 0, y : 0, scroll : 0};
     
 }, false);
 
-document.addEventListener('mousemove', function(event){
+listenerDiv.addEventListener('mousemove', function(event){
     mouse.x	= (event.clientX / window.innerWidth ) - 0.5
     mouse.y	= (event.clientY / window.innerHeight) - .5 + Math.PI
 }, false);
 
-document.addEventListener('mousewheel', function(event){
+listenerDiv.addEventListener('mousewheel', function(event){
     mouse.scroll += ((typeof event.wheelDelta != "undefined")?(-event.wheelDelta):event.detail)*(mouse.scroll/1000);
     if (mouse.scroll < 0)
     {

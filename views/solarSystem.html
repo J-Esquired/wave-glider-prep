@@ -3,16 +3,17 @@
     <head>
     </head>
     <body style="margin:0">
-        <iframe src="/spaceHome.html" id="theOtherPart" style=" position: absolute; top: 0; left:0; height: 100%; width: 100%; z-index: 0; margin:0; padding: 0; border: 0;" onfocus="document.focus()">
+        <iframe src="/spaceHome.html" id="theOtherPart" style=" position: absolute; top: 0; left:0; height: 100%; width: 100%; z-index: 0; margin:0; padding: 0; border: 0;" onfocus="document.getElementById('cheats').focus()">
   			<p>Your browser does not support iframes.</p>
 		</iframe>
+		<div id="cheats"style="position: absolute; top: 0; left:0; z-index:1; width: 100%; height: 100%; opacity:0.0;"></div>
         <script type="text/javascript" src="scripts/jquery-2.1.4.min.js"></script>
         <script type="text/javascript" src="scripts/three.min.js"></script>
         <script type="text/javascript" src="scripts/superSystem.js"></script>
         <script type="text/javascript">
             var planetUrls = ['SunPage', 'MercuryPage', 'VenusPage', 'EarthPage', 'MarsPage', 'JupiterPage', 'SaturnPage', 'UranusPage', 'NeptunePage'];
             var index = 0;
-            document.addEventListener('keydown', function(event){
+            document.getElementById('cheats').addEventListener('keydown', function(event){
                 console.log(event.keyCode);
                 if (event.keyCode === 68 || event.keyCode === 39)
                 {

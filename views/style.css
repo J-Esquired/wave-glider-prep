@@ -11,28 +11,6 @@ body 	{
 		border: 50px solid transparent; 
 		}
 
-header 	{ 
-		opacity: 0.5;
-		width: 978px; 
-		display: table; 
-		text-align: center; 
-		color: white; 
-		border: 7px #383838 solid; 
-		text-shadow: -1px 0 #383838, 0 1px #383838, 1px 0 #383838, 0 -2px #383838; 
-		border-bottom: 4px #383838 solid;
-		}
-
-nav 	{ 	
-		opacity: 0.5; 
-		float: center; 
-		width: 976px; 
-		display: table; 
-		text-align: center; 
-		border: 8px #383838 solid; 
-		border-top: 4px #383838 solid; 
-		border-bottom: 4px #383838 solid; 
-		color: white;
-		}
 
 article { 
 		opacity: 0.5; 
@@ -41,19 +19,7 @@ article {
 		height: 700px; 
 		display: table; 
 		text-align: center; 
-		color: white; 
-		border: 8px #383838 solid; 
-		border-top: 4px #383838 solid; 
-		border-bottom: 4px #383838 solid;
+		color: white;
 		}
 		
-footer 	{ 
-		opacity: 0.5; 
-		width: 966px; 
-		height: 100px; 
-		color: white; 
-		border: 8px #383838 solid; 
-		border-top: 4px #383838 solid; 
-		padding: 5px;
-		}
 		
