@@ -10,7 +10,7 @@ renderer.shadowMap.type    = THREE.PCFSoftShadowMap;
 
 var onRenderFcts= [];
 var scene	= new THREE.Scene();
-var camera	= new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.01, 1000000);
+var cameras	= [new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 1000), new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 10000)];
 
 //////////////////////////////////////////////////////////////////////////////////
 //		Comment								//
@@ -30,13 +30,21 @@ onRenderFcts.push(function(){
 //////////////////////////////////////////////////////////////////////////////////
 //		Camera Controls							//
 //////////////////////////////////////////////////////////////////////////////////
-var focus = {planet: 0, moon: 0};
-var mouse	= {x : 0, y : 0, scroll : 0};
-var listenerDiv = document.getElementById('cheats');
+cameras[1].position.x = 0;
+cameras[1].position.y = 50000;
+cameras[1].position.z = 0;
+cameras[1].lookAt( new THREE.Vector3(0, 0, 0) );
+
+var focus = {planet: 0, moon: 0},
+    mouse	= {x : 0, y : 0, scroll : 0},
+    listenerDiv = document.getElementById('cheats');
+
+if (listenerDiv === null)
+{
+    listenerDiv = document;
+}
 
  document.addEventListener('keydown', function(event){
-//renderer.domElement.addEventListener('keydown', function(event){
-    console.log(event.keyCode);
     if (event.keyCode === 68 || event.keyCode === 39)
     {
         focus.planet++;
@@ -79,57 +87,76 @@ var listenerDiv = document.getElementById('cheats');
 }, false);
 
 listenerDiv.addEventListener('mousemove', function(event){
-    mouse.x	= (event.clientX / window.innerWidth ) - 0.5
-    mouse.y	= (event.clientY / window.innerHeight) - .5 + Math.PI
+    mouse.x	= (event.clientX / window.innerWidth ) - 0.5;
+    mouse.y	= (event.clientY / window.innerHeight) - .5 + Math.PI;
 }, false);
 
 listenerDiv.addEventListener('mousewheel', function(event){
     mouse.scroll += ((typeof event.wheelDelta != "undefined")?(-event.wheelDelta):event.detail)*(mouse.scroll/1000);
-    if (mouse.scroll < 0)
+    
+    if (focus.moon === 0)
     {
-        mouse.scroll = 0;
+        if (mouse.scroll < planets[focus.planet].radius * 3.5)
+        {
+            mouse.scroll = planets[focus.planet].radius * 3.5;
+        }
+        else if (mouse.scroll > planets[focus.planet].radius * 50)
+        {
+            mouse.scroll = planets[focus.planet].radius * 50;
+        }
+    }
+    else if (focus.moon !== 0)
+    {
+        if (mouse.scroll < planets[focus.planet].moons[focus.moon].radius * 3.5)
+        {
+            mouse.scroll = planets[focus.planet].moons[focus.moon].radius * 3.5;
+        }
+        else if (mouse.scroll > planets[focus.planet].moons[focus.moon].radius * 50)
+        {
+            mouse.scroll = planets[focus.planet].moons[focus.moon].radius * 50;
+        }
     }
 }, false);
 
 onRenderFcts.push(function(delta, now){
     
-    var cameraAngle = 3 * Math.PI / 4,
+    var cameraAngle = Math.PI / 2,
         phi = Math.PI/2 + mouse.y,
-        theta = (Math.PI * mouse.x);
+        theta = (Math.PI * 2  * mouse.x);
     
     if (focus.moon === 0)
     {
-        theta -= cameraAngle + Math.PI - planets[focus.planet].spherical.theta;
+        theta += cameraAngle + planets[focus.planet].spherical.theta;
         
-        camera.position.x = planets[focus.planet].cartesian.x + mouse.scroll*Math.cos(theta)*Math.sin(phi);
-        camera.position.z = planets[focus.planet].cartesian.y + mouse.scroll*Math.sin(theta)*Math.sin(phi);
-        camera.position.y = planets[focus.planet].cartesian.z + mouse.scroll*Math.cos(phi);
+        cameras[0].position.x = planets[focus.planet].cartesian.x + mouse.scroll*Math.cos(theta)*Math.sin(phi);
+        cameras[0].position.z = planets[focus.planet].cartesian.y + mouse.scroll*Math.sin(theta)*Math.sin(phi);
+        cameras[0].position.y = planets[focus.planet].cartesian.z + mouse.scroll*Math.cos(phi);
 
-        camera.lookAt( new THREE.Vector3(planets[focus.planet].cartesian.x, planets[focus.planet].cartesian.z, planets[focus.planet].cartesian.y) );
+        cameras[0].lookAt( new THREE.Vector3(planets[focus.planet].cartesian.x, planets[focus.planet].cartesian.z, planets[focus.planet].cartesian.y) );
     }
     else
     {   
-        theta -= cameraAngle + Math.PI - Math.atan2(planets[focus.planet].moons[focus.moon - 1].cartesian.y, planets[focus.planet].moons[focus.moon - 1].cartesian.x);
+        theta += cameraAngle + Math.atan2(planets[focus.planet].moons[focus.moon - 1].cartesian.y, planets[focus.planet].moons[focus.moon - 1].cartesian.x);
         
-        camera.position.x = planets[focus.planet].moons[focus.moon - 1].cartesian.x + mouse.scroll*Math.cos(theta)*Math.sin(phi);
-        camera.position.z = planets[focus.planet].moons[focus.moon - 1].cartesian.y + mouse.scroll*Math.sin(theta)*Math.sin(phi);
-        camera.position.y = planets[focus.planet].moons[focus.moon - 1].cartesian.z + mouse.scroll*Math.cos(phi);
+        cameras[0].position.x = planets[focus.planet].moons[focus.moon - 1].cartesian.x + mouse.scroll*Math.cos(theta)*Math.sin(phi);
+        cameras[0].position.z = planets[focus.planet].moons[focus.moon - 1].cartesian.y + mouse.scroll*Math.sin(theta)*Math.sin(phi);
+        cameras[0].position.y = planets[focus.planet].moons[focus.moon - 1].cartesian.z + mouse.scroll*Math.cos(phi);
 
-        camera.lookAt( new THREE.Vector3(planets[focus.planet].moons[focus.moon - 1].cartesian.x, planets[focus.planet].moons[focus.moon - 1].cartesian.z, planets[focus.planet].moons[focus.moon - 1].cartesian.y) );
+        cameras[0].lookAt( new THREE.Vector3(planets[focus.planet].moons[focus.moon - 1].cartesian.x, planets[focus.planet].moons[focus.moon - 1].cartesian.z, planets[focus.planet].moons[focus.moon - 1].cartesian.y) );
     }
+    
+    cameras[1].rotation.z = theta * 2;
 })
 
 //////////////////////////////////////////////////////////////////////////////////
 //		render the scene						//
 //////////////////////////////////////////////////////////////////////////////////
-onRenderFcts.push(function(){
-    renderer.render( scene, camera );		
-})
 
 //////////////////////////////////////////////////////////////////////////////////
 //		loop runner							//
 //////////////////////////////////////////////////////////////////////////////////
-var lastTimeMsec= null
+var lastTimeMsec= null,
+    info = null;
 requestAnimationFrame(function animate(nowMsec){
     // keep looping
     requestAnimationFrame( animate );
@@ -138,13 +165,34 @@ requestAnimationFrame(function animate(nowMsec){
     var deltaMsec	= Math.min(200, nowMsec - lastTimeMsec)
     lastTimeMsec	= nowMsec
     // call each update function
+    
+    renderDown(info);
     onRenderFcts.forEach(function(onRenderFct){
         onRenderFct(deltaMsec/1000, nowMsec/1000)
     })
     
+    renderer.setViewport(0, 0, window.innerWidth, window.innerHeight);
+    renderer.setScissor(0, 0, window.innerWidth, window.innerHeight);
+    renderer.enableScissorTest(true);
+    renderer.render(scene, cameras[0]);
+    
+    lastTimeMsec	= lastTimeMsec || nowMsec-1000/60
+    var deltaMsec	= Math.min(200, nowMsec - lastTimeMsec)
+    lastTimeMsec	= nowMsec
+    
+    info = renderUp();
+    onRenderFcts.forEach(function(onRenderFct){
+        onRenderFct(deltaMsec/1000, nowMsec/1000)
+    })
+    
+    renderer.setViewport(window.innerWidth*3/4, window.innerHeight*3/4, window.innerWidth/4, window.innerHeight/4);
+    renderer.setScissor(window.innerWidth*3/4, window.innerHeight*3/4, window.innerWidth/4, window.innerHeight/4);
+    renderer.enableScissorTest(true);
+    renderer.render(scene, cameras[1]);
+    
     // Tweet
-    if (~~(Math.random()*5000) === 0) {
-        var tweet = "Sun, you just got #rekt by a factor of " + ~~(Math.random()*5000) + '.';
+//    if (~~(Math.random()*5000) === 0) {
+//        var tweet = "Sun, you just got #rekt by a factor of " + ~~(Math.random()*5000) + '.';
 //        var xmlHttp = new XMLHttpRequest();
 //        xmlHttp.onreadystatechange = function() { 
 //            if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
@@ -171,7 +219,7 @@ requestAnimationFrame(function animate(nowMsec){
 //                console.log("Tweetin' didn't work!!!");
 //            }
 //        });
-    }
+//    }
 })
 
 
@@ -188,6 +236,45 @@ function scroll()
     else
     {
         mouse.scroll = planets[focus.planet].moons[focus.moon].radius * 10;
+    }
+}
+
+function renderUp()
+{
+    var groupSMA = 0,
+        info = [];
+    for (var planet = 0; planet < planets.length; planet++)
+    {
+        info.push(planets[planet].SMA);
+        
+        groupSMA += (planet != 0) ? planets[planet].radius * 1.1 : 0;
+        planets[planet].SMA = groupSMA;
+        groupSMA += planets[planet].radius * 1.1;
+        
+        for (var moon = 1; moon <= planets[planet].moons.length; moon++)
+        {
+            info.push(planets[planet].moons[moon - 1].SMA);
+            
+            planets[planet].moons[moon - 1].SMA = (planets[planet].radius + planets[planet].moons[moon - 1].radius) * 1.1;
+        }
+    }
+    return info;
+}
+
+function renderDown(info)
+{
+    if (!info) return;
+    var index = 0;
+    for (var planet = 0; planet < planets.length; planet++)
+    {
+        planets[planet].SMA = info[index];
+        index++;
+        
+        for (var moon = 1; moon <= planets[planet].moons.length; moon++)
+        {
+            planets[planet].moons[moon - 1].SMA = info[index];
+            index++;
+        }
     }
 }
 
@@ -708,7 +795,7 @@ function scroll()
         }
     ];
 
-solarSystem(planets, .01);
+solarSystem(planets, .0001);
 
 function solarSystem(planets, scale)
 {
@@ -718,19 +805,20 @@ function solarSystem(planets, scale)
     }
     spotLight.distance = planets[planets.length - 1].SMA * 40;
     mouse.scroll = planets[focus.planet].radius * 10;
+    cameras[1].position.y = cameras[1].position.y * scale * 100;
 }
 
-function planet(planet, scale, emitting)
+function planet(planet, scale)
 {
     planet.radius = planet.radius * scale;
-    planet.SMA = planet.SMA * scale / 50;
+    planet.SMA = planet.SMA * scale;
     
     var particles = new THREE.DodecahedronGeometry(planet.radius, 3),
         pMaterial = new THREE.MeshPhongMaterial({
             map: THREE.ImageUtils.loadTexture('images/planets/' + planet.texture),
             shading: THREE.SmoothShading,
             bumpMap: THREE.ImageUtils.loadTexture('images/planets/' + planet.bump),
-            bumpScale: .5,
+            bumpScale: scale * 50,
             specularMap: THREE.ImageUtils.loadTexture('images/planets/' + planet.specular),
             color: planet.color
         });
@@ -766,14 +854,13 @@ function planet(planet, scale, emitting)
         planet.moons[j].system = moonSystem;
         scene.add(moonSystem);
     }
-    
-    onRenderFcts.push(function(){
+    onRenderFcts.splice(0, 0, function(){
         var angle	= Date.now()/(1000) * (2*Math.PI);
         
         planet.spherical.theta = angle/planet.orbitalTime;
         planet.spherical.phi = Math.PI/2 - Math.sin(planet.spherical.theta) * planet.inclination;
         
-        particleSystem.position.x = planet.cartesian.x = planet.SMA*Math.cos(planet.spherical.theta)*Math.sin(planet.spherical.phi);
+        particleSystem.position.x = planet.cartesian.x = planet.SMA;//*Math.cos(planet.spherical.theta)*Math.sin(planet.spherical.phi);
         particleSystem.position.z = planet.cartesian.y = planet.SMA*Math.sin(planet.spherical.theta)*Math.sin(planet.spherical.phi);
         particleSystem.position.y = planet.cartesian.z = planet.SMA*Math.cos(planet.spherical.phi);
         
