@@ -10,7 +10,7 @@ renderer.shadowMap.type    = THREE.PCFSoftShadowMap;
 
 var onRenderFcts= [];
 var scene	= new THREE.Scene();
-var cameras	= [new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 1000), new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 10000)];
+var cameras	= [new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 1000)];
 
 //////////////////////////////////////////////////////////////////////////////////
 //		Comment								//
@@ -30,11 +30,6 @@ onRenderFcts.push(function(){
 //////////////////////////////////////////////////////////////////////////////////
 //		Camera Controls							//
 //////////////////////////////////////////////////////////////////////////////////
-cameras[1].position.x = 0;
-cameras[1].position.y = 50000;
-cameras[1].position.z = 0;
-cameras[1].lookAt( new THREE.Vector3(0, 0, 0) );
-
 var focus = {planet: 0, moon: 0},
     mouse	= {x : 0, y : 0, scroll : 0},
     listenerDiv = document.getElementById('cheats');
@@ -144,8 +139,6 @@ onRenderFcts.push(function(delta, now){
 
         cameras[0].lookAt( new THREE.Vector3(planets[focus.planet].moons[focus.moon - 1].cartesian.x, planets[focus.planet].moons[focus.moon - 1].cartesian.z, planets[focus.planet].moons[focus.moon - 1].cartesian.y) );
     }
-    
-    cameras[1].rotation.z = theta * 2;
 })
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -166,30 +159,11 @@ requestAnimationFrame(function animate(nowMsec){
     lastTimeMsec	= nowMsec
     // call each update function
     
-    renderDown(info);
     onRenderFcts.forEach(function(onRenderFct){
         onRenderFct(deltaMsec/1000, nowMsec/1000)
     })
     
-    renderer.setViewport(0, 0, window.innerWidth, window.innerHeight);
-    renderer.setScissor(0, 0, window.innerWidth, window.innerHeight);
-    renderer.enableScissorTest(true);
     renderer.render(scene, cameras[0]);
-    
-    lastTimeMsec	= lastTimeMsec || nowMsec-1000/60
-    var deltaMsec	= Math.min(200, nowMsec - lastTimeMsec)
-    lastTimeMsec	= nowMsec
-    
-    info = renderUp();
-    onRenderFcts.forEach(function(onRenderFct){
-        onRenderFct(deltaMsec/1000, nowMsec/1000)
-    })
-    
-    renderer.setViewport(window.innerWidth*3/4, window.innerHeight*3/4, window.innerWidth/4, window.innerHeight/4);
-    renderer.setScissor(window.innerWidth*3/4, window.innerHeight*3/4, window.innerWidth/4, window.innerHeight/4);
-    renderer.enableScissorTest(true);
-    renderer.render(scene, cameras[1]);
-    
     // Tweet
 //    if (~~(Math.random()*5000) === 0) {
 //        var tweet = "Sun, you just got #rekt by a factor of " + ~~(Math.random()*5000) + '.';
@@ -236,45 +210,6 @@ function scroll()
     else
     {
         mouse.scroll = planets[focus.planet].moons[focus.moon].radius * 10;
-    }
-}
-
-function renderUp()
-{
-    var groupSMA = 0,
-        info = [];
-    for (var planet = 0; planet < planets.length; planet++)
-    {
-        info.push(planets[planet].SMA);
-        
-        groupSMA += (planet != 0) ? planets[planet].radius * 1.1 : 0;
-        planets[planet].SMA = groupSMA;
-        groupSMA += planets[planet].radius * 1.1;
-        
-        for (var moon = 1; moon <= planets[planet].moons.length; moon++)
-        {
-            info.push(planets[planet].moons[moon - 1].SMA);
-            
-            planets[planet].moons[moon - 1].SMA = (planets[planet].radius + planets[planet].moons[moon - 1].radius) * 1.1;
-        }
-    }
-    return info;
-}
-
-function renderDown(info)
-{
-    if (!info) return;
-    var index = 0;
-    for (var planet = 0; planet < planets.length; planet++)
-    {
-        planets[planet].SMA = info[index];
-        index++;
-        
-        for (var moon = 1; moon <= planets[planet].moons.length; moon++)
-        {
-            planets[planet].moons[moon - 1].SMA = info[index];
-            index++;
-        }
     }
 }
 
@@ -805,7 +740,6 @@ function solarSystem(planets, scale)
     }
     spotLight.distance = planets[planets.length - 1].SMA * 40;
     mouse.scroll = planets[focus.planet].radius * 10;
-    cameras[1].position.y = cameras[1].position.y * scale * 100;
 }
 
 function planet(planet, scale)
