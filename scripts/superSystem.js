@@ -10,7 +10,7 @@ renderer.shadowMap.type    = THREE.PCFSoftShadowMap;
 
 var onRenderFcts= [];
 var scene	= new THREE.Scene();
-var cameras	= [new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 1000)];
+var cameras	= [new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 10000)];
 
 //////////////////////////////////////////////////////////////////////////////////
 //		Comment								//
@@ -60,7 +60,7 @@ if (listenerDiv === null)
         }
         scroll();
     }
-    if (event.keyCode === 87 || event.keyCode === 38)
+    /*if (event.keyCode === 87 || event.keyCode === 38)
     {
         focus.moon++;
         if (focus.moon === planets[focus.planet].moons.length + 1)
@@ -77,7 +77,7 @@ if (listenerDiv === null)
             focus.moon = planets[focus.planet].moons.length;
         }
         scroll();
-    }
+    }*/
     
 }, false);
 
@@ -87,30 +87,30 @@ listenerDiv.addEventListener('mousemove', function(event){
 }, false);
 
 listenerDiv.addEventListener('mousewheel', function(event){
-    mouse.scroll += ((typeof event.wheelDelta != "undefined")?(-event.wheelDelta):event.detail)*(mouse.scroll/1000);
+    mouse.scroll += ((typeof event.wheelDelta != "undefined")?(-event.wheelDelta):event.detail)*(mouse.scroll/7000);
     
     if (focus.moon === 0)
     {
-        if (mouse.scroll < planets[focus.planet].radius * 3.5)
+        if (mouse.scroll < planets[focus.planet].radius * 6)
         {
-            mouse.scroll = planets[focus.planet].radius * 3.5;
+            mouse.scroll = planets[focus.planet].radius * 6;
         }
         else if (mouse.scroll > planets[focus.planet].radius * 50)
         {
             mouse.scroll = planets[focus.planet].radius * 50;
         }
     }
-    else if (focus.moon !== 0)
+    /*else if (focus.moon !== 0)
     {
-        if (mouse.scroll < planets[focus.planet].moons[focus.moon].radius * 3.5)
+        if (mouse.scroll < 3)
         {
-            mouse.scroll = planets[focus.planet].moons[focus.moon].radius * 3.5;
+            mouse.scroll = 3;
         }
-        else if (mouse.scroll > planets[focus.planet].moons[focus.moon].radius * 50)
+        else if (mouse.scroll > 20)
         {
-            mouse.scroll = planets[focus.planet].moons[focus.moon].radius * 50;
+            mouse.scroll = 20;
         }
-    }
+    }*/
 }, false);
 
 onRenderFcts.push(function(delta, now){
@@ -745,7 +745,7 @@ function solarSystem(planets, scale)
 function planet(planet, scale)
 {
     planet.radius = planet.radius * scale;
-    planet.SMA = planet.SMA * scale;
+    planet.SMA = planet.SMA * scale / 50;
     
     var particles = new THREE.DodecahedronGeometry(planet.radius, 3),
         pMaterial = new THREE.MeshPhongMaterial({

@@ -183,7 +183,7 @@ Plotly.d3.csv('https://raw.githubusercontent.com/plotly/datasets/master/2011_feb
 });
 */
 /////////////////////////////////////////////////////////////////////////////
-/*
+
 //                           "HEAT" MAP
 Plotly.d3.csv('https://raw.githubusercontent.com/plotly/datasets/master/2015_06_30_precipitation.csv', function(err, rows){
       function unpack(rows, key) {
@@ -222,7 +222,7 @@ Plotly.d3.csv('https://raw.githubusercontent.com/plotly/datasets/master/2015_06_
 
     var layout = {
       geo:{
-        scope: 'north america',
+        scope: 'world',
         showland: true,
         landcolor: 'rgb(212,212,212)',
         subunitcolor: 'rgb(255,255,255)',
@@ -231,13 +231,7 @@ Plotly.d3.csv('https://raw.githubusercontent.com/plotly/datasets/master/2015_06_
         lakecolor: 'rgb(255,255,255)',
         showsubunits: true,
         showcountries: true,
-        resolution: 50,
-        projection: {
-          type: 'conic conformal',
-          rotation: {
-            long: -100
-          }
-        },
+        resolution: 50
       },
       longaxis: {
         showgrid: true,
@@ -258,4 +252,3 @@ Plotly.d3.csv('https://raw.githubusercontent.com/plotly/datasets/master/2015_06_
 
     Plotly.newPlot('myDiv', data, layout);
   });
-*/
