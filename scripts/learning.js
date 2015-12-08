@@ -159,8 +159,7 @@ Plotly.d3.csv('https://raw.githubusercontent.com/plotly/datasets/master/2011_feb
             }
         }
     }];
-
-
+    
     var layout = {
         title: 'Most Trafficked US airports',
         colorbar: true,
@@ -183,7 +182,7 @@ Plotly.d3.csv('https://raw.githubusercontent.com/plotly/datasets/master/2011_feb
 });
 */
 /////////////////////////////////////////////////////////////////////////////
-
+/*
 //                           "HEAT" MAP
 Plotly.d3.csv('https://raw.githubusercontent.com/plotly/datasets/master/2015_06_30_precipitation.csv', function(err, rows){
       function unpack(rows, key) {
@@ -251,4 +250,60 @@ Plotly.d3.csv('https://raw.githubusercontent.com/plotly/datasets/master/2015_06_
     };
 
     Plotly.newPlot('myDiv', data, layout);
+  });
+*/
+
+Plotly.d3.csv('data/Solar_System_Data/SolarSystem.csv', function(err, rows){
+    function unpack(rows, key) {
+        return rows.map(function(row) { return row[key]; });
+    }
+    
+    var currentData,
+        dataSets = {};
+    
+    dataSets["Diameter (km)"] = unpack(rows, unpack(rows, "Diameter (km)"));
+    
+    function getData(dataType) {
+        currentData = dataSets[dataType];
+    }
+    
+    function setPlot(dataType) {
+        getData(dataType);
+        
+        var trace = {
+                type: 'bar',
+                x: unpack(rows, "Name"),
+                y: currentData
+
+        var data   = [trace],
+            layout = {
+            title: 'Solar System'
+        }
+
+        Plotly.newPlot('myDiv', data, layout);
+        };
+        /*
+        
+        
+    var innerContainer = document.querySelector('[data-num="0"'),
+        plotEl = innerContainer.querySelector('.plot'),
+        countrySelector = innerContainer.querySelector('.countrydata');
+
+    function assignOptions(textArray, selector) {
+        for (var i = 0; i < textArray.length;  i++) {
+            var currentOption = document.createElement('option');
+            currentOption.text = textArray[i];
+            selector.appendChild(currentOption);
+        }
+    }
+
+    assignOptions(listofCountries, countrySelector);
+
+    function updateCountry(){
+        setBubblePlot(countrySelector.value);
+    }
+
+    countrySelector.addEventListener('change', updateCountry, false);
+    
+    */
   });

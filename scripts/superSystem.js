@@ -10,7 +10,7 @@ renderer.shadowMap.type    = THREE.PCFSoftShadowMap;
 
 var onRenderFcts= [];
 var scene	= new THREE.Scene();
-var cameras	= [new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 10000)];
+var cameras	= [new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 11000)];
 
 //////////////////////////////////////////////////////////////////////////////////
 //		Comment								//
