@@ -26,6 +26,8 @@ function sortData(xData, yData)
         return b[0] - a[0];
     });
     
+    console.log(allData);
+    
     for (var idx = 0; idx < xData.length; idx++)
     {
         xData[idx] = allData[idx][0];
@@ -312,9 +314,13 @@ Plotly.d3.csv('data/Solar_System_Data/SolarSystem.csv', function(err, rows){
         
         currentDataX = getData(dataX);
         currentDataY = getData(dataY);
-        var tempData = sortData(currentDataX, currentDataY);
-        currentDataX = tempData[0];
-        currentDataY = tempData[1];
+        
+        if (!(dataX === 'Name'))
+        {
+            var tempData = sortData(currentDataX, currentDataY);
+            currentDataX = tempData[0];
+            currentDataY = tempData[1];
+        }
         
         if (chartType === 'line')
         {
@@ -339,22 +345,45 @@ Plotly.d3.csv('data/Solar_System_Data/SolarSystem.csv', function(err, rows){
     var innerContainer = document.querySelector('[data-num="0"'),
         xSelector = innerContainer.querySelector('.xSelector'),
         ySelector = innerContainer.querySelector('.ySelector'),
+        specials = document.getElementById('checkboxes'),
         chartSelector = innerContainer.querySelector('.chartSelector');
 
-    function assignOptions(textArray, selector) {
+    function assignOptions(textArray, selector, check) {
         for (var i = 0; i < textArray.length;  i++) {
-            var currentOption = document.createElement('option');
-            currentOption.text = textArray[i];
-            selector.appendChild(currentOption);
-            dataSets[textArray[i]] = unpack(rows, textArray[i]);
+            var currentOption;
+            if (check)
+            {
+                currentOption = document.createElement('input');
+                currentOption.type = 'checkbox';
+                currentOption.id = textArray[i];
+                
+                var label = document.createElement('label');
+                label.for = textArray[i];
+                label.innerHTML = textArray[i];
+                
+                currentOption.text = textArray[i];
+                selector.appendChild(currentOption);
+                selector.appendChild(label);
+                selector.appendChild(document.createElement('br'));
+                dataSets[textArray[i]] = unpack(rows, textArray[i]);
+            }
+            else
+            {
+                currentOption = document.createElement('option');
+                currentOption.text = textArray[i];
+                selector.appendChild(currentOption);
+                dataSets[textArray[i]] = unpack(rows, textArray[i]);
+            }
         }
     }
 
-    assignOptions(['Name', 'Diameter (km)', 'Mean Distance from Sun (AU)', 'Orbital Period (years)', 'Orbital Eccentricity', 'Mean Orbital Velocity (km/sec)', 'Rotation Period (days)', 'Inclination of Axis (degrees)', 'Mean Temperature at Surface (C)', 'Gravity at Equator (Earth=1)', 'Escape Velocity (km/sec)', 'Mean Density (water=1)', 'Atmospheric Composition', 'Number of Moons'], xSelector);
+    assignOptions(['Name', 'Diameter (km)', 'Mean Distance from Sun (AU)', 'Orbital Period (years)', 'Orbital Eccentricity', 'Mean Orbital Velocity (km/sec)', 'Rotation Period (days)', 'Inclination of Axis (degrees)', 'Mean Temperature at Surface (C)', 'Gravity at Equator (Earth=1)', 'Escape Velocity (km/sec)', 'Mean Density (water=1)', 'Number of Moons'], xSelector, false);
     
-    assignOptions(['Diameter (km)', 'Mean Distance from Sun (AU)', 'Orbital Period (years)', 'Orbital Eccentricity', 'Mean Orbital Velocity (km/sec)', 'Rotation Period (days)', 'Inclination of Axis (degrees)', 'Mean Temperature at Surface (C)', 'Gravity at Equator (Earth=1)', 'Escape Velocity (km/sec)', 'Mean Density (water=1)', 'Atmospheric Composition', 'Number of Moons'], ySelector);
+    assignOptions(['Diameter (km)', 'Mean Distance from Sun (AU)', 'Orbital Period (years)', 'Orbital Eccentricity', 'Mean Orbital Velocity (km/sec)', 'Rotation Period (days)', 'Inclination of Axis (degrees)', 'Mean Temperature at Surface (C)', 'Gravity at Equator (Earth=1)', 'Escape Velocity (km/sec)', 'Mean Density (water=1)', 'Number of Moons'], ySelector, false);
     
-    assignOptions(['scatter', 'bar', 'line'], chartSelector);
+    assignOptions(['scatter', 'line'], chartSelector, false);
+    
+    assignOptions(['Line of Best Fit'], specials, true);
     
     updateData();
     function updateData(){
