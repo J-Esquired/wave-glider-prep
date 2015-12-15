@@ -1,3 +1,43 @@
+////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////
+//                              UTILITY FUNCTIONS
+function contains(a, obj)
+{
+    for (var i = 0; i < a.length; i++)
+    {
+        if (a[i] === obj)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+function sortData(xData, yData)
+{
+    var allData = [];
+    
+    for (var idx = 0; idx < xData.length; idx++)
+    {
+        allData[idx] = [xData[idx], yData[idx]];
+    }
+    
+    allData.sort(function(a, b) {
+        return b[0] - a[0];
+    });
+    
+    for (var idx = 0; idx < xData.length; idx++)
+    {
+        xData[idx] = allData[idx][0];
+        yData[idx] = allData[idx][1];
+    }
+    
+    return [xData, yData];
+}
+////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////
+
+
 /*
 //                 3D SCATTER PLOT, NICE TEXTURE
 var arrayX = [0],
@@ -258,52 +298,104 @@ Plotly.d3.csv('data/Solar_System_Data/SolarSystem.csv', function(err, rows){
         return rows.map(function(row) { return row[key]; });
     }
     
-    var currentData,
+    var currentDataX,
+        currentDataY,
         dataSets = {};
     
-    dataSets["Diameter (km)"] = unpack(rows, unpack(rows, "Diameter (km)"));
-    
     function getData(dataType) {
-        currentData = dataSets[dataType];
+       return dataSets[dataType];
     }
     
-    function setPlot(dataType) {
-        getData(dataType);
+    function setPlot(dataX, dataY, chartType) {
         
-        var trace = {
-                type: 'bar',
-                x: unpack(rows, "Name"),
-                y: currentData
-
-        var data   = [trace],
-            layout = {
-            title: 'Solar System'
+        var mode = 'markers';
+        
+        currentDataX = getData(dataX);
+        currentDataY = getData(dataY);
+        
+        if (!(dataX === 'Name'))
+        {
+            var tempData = sortData(currentDataX, currentDataY);
+            currentDataX = tempData[0];
+            currentDataY = tempData[1];
+        }
+        
+        if (chartType === 'line')
+        {
+            chartType = 'scatter';
+            mode = 'lines';
         }
 
-        Plotly.newPlot('myDiv', data, layout);
-        };
-        /*
+        var data   = [{
+            type: chartType,
+            mode: mode,
+            x: currentDataX,
+            y: currentDataY
+        }],
+            layout = {
+                title: 'Solar System'
+            }
         
+        Plotly.newPlot('plotdiv', data, layout);
+    };
         
     var innerContainer = document.querySelector('[data-num="0"'),
-        plotEl = innerContainer.querySelector('.plot'),
-        countrySelector = innerContainer.querySelector('.countrydata');
+        xSelector = innerContainer.querySelector('.xSelector'),
+        ySelector = innerContainer.querySelector('.ySelector'),
+        specials = document.getElementById('checkboxes'),
+        chartSelector = innerContainer.querySelector('.chartSelector');
 
-    function assignOptions(textArray, selector) {
+    function assignOptions(textArray, selector, check) {
         for (var i = 0; i < textArray.length;  i++) {
-            var currentOption = document.createElement('option');
-            currentOption.text = textArray[i];
-            selector.appendChild(currentOption);
+            var currentOption;
+            if (check)
+            {
+                currentOption = document.createElement('input');
+                currentOption.type = 'checkbox';
+                currentOption.id = textArray[i];
+                
+                var label = document.createElement('label');
+                label.for = textArray[i];
+                label.innerHTML = textArray[i];
+                
+                currentOption.text = textArray[i];
+                selector.appendChild(currentOption);
+                selector.appendChild(label);
+                selector.appendChild(document.createElement('br'));
+                dataSets[textArray[i]] = unpack(rows, textArray[i]);
+            }
+            else
+            {
+                currentOption = document.createElement('option');
+                currentOption.text = textArray[i];
+                selector.appendChild(currentOption);
+                dataSets[textArray[i]] = unpack(rows, textArray[i]);
+            }
         }
     }
 
-    assignOptions(listofCountries, countrySelector);
-
-    function updateCountry(){
-        setBubblePlot(countrySelector.value);
+    assignOptions(['Name', 'Diameter (km)', 'Mean Distance from Sun (AU)', 'Orbital Period (years)', 'Orbital Eccentricity', 'Mean Orbital Velocity (km/sec)', 'Rotation Period (days)', 'Inclination of Axis (degrees)', 'Mean Temperature at Surface (C)', 'Gravity at Equator (Earth=1)', 'Escape Velocity (km/sec)', 'Mean Density (water=1)', 'Number of Moons'], xSelector, false);
+    
+    assignOptions(['Diameter (km)', 'Mean Distance from Sun (AU)', 'Orbital Period (years)', 'Orbital Eccentricity', 'Mean Orbital Velocity (km/sec)', 'Rotation Period (days)', 'Inclination of Axis (degrees)', 'Mean Temperature at Surface (C)', 'Gravity at Equator (Earth=1)', 'Escape Velocity (km/sec)', 'Mean Density (water=1)', 'Number of Moons'], ySelector, false);
+    
+    assignOptions(['scatter', 'line'], chartSelector, false);
+    
+    assignOptions(['Line of Best Fit'], specials, true);
+    
+    updateData();
+    function updateData(){
+        var Ys = document.getElementsByClassName('ySelector'),
+            datatypes = [];
+        
+        for (var i = 0; i < Ys.length; i++)
+        {
+            datatypes[i] = Ys[i].value;
+        }
+        
+        setPlot(xSelector.value, datatypes, chartSelector.value);
     }
 
-    countrySelector.addEventListener('change', updateCountry, false);
-    
-    */
-  });
+    xSelector.addEventListener('change', updateData, false);
+    ySelector.addEventListener('change', updateData, false);
+    chartSelector.addEventListener('change', updateData, false);
+});
