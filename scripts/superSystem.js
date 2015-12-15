@@ -813,7 +813,7 @@ function planet(planet, scale)
                         var ringGeometry = new THREE.Geometry();
                         for (var i = 0; i < ringColors.length; i ++) {
                             var circumference = 2*Math.PI*(ring.innerRadius + i*miniRingWidth);
-                            var particleDensity = 60 * ringOpacities[i];
+                            var particleDensity = 45 * ringOpacities[i];
                             for (var j = 0; j < circumference*particleDensity; j++) {
                                 var particleRadius = Math.random()*miniRingWidth + i*miniRingWidth + ring.innerRadius;
                                 var theta = (2*Math.PI*(j/(circumference*particleDensity)) + 2*Math.PI + Math.random()/10)%(2*Math.PI);
@@ -826,7 +826,7 @@ function planet(planet, scale)
 
                         var material = new THREE.PointsMaterial({
                             vertexColors: THREE.VertexColors,
-                            size: 1*scale
+                            size: 2*scale
                                                                 });
 
                         ringPoints = new THREE.Points( ringGeometry, material );
