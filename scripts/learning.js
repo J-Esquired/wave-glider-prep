@@ -19,14 +19,12 @@ function sortData(xData, yData)
     
     for (var idx = 0; idx < xData.length; idx++)
     {
-        allData.push([xData[idx], yData[idx]]);
+        allData[idx] = [xData[idx], yData[idx]];
     }
     
     allData.sort(function(a, b) {
         return b[0] - a[0];
     });
-    
-    console.log(allData);
     
     for (var idx = 0; idx < xData.length; idx++)
     {
@@ -327,18 +325,17 @@ Plotly.d3.csv('data/Solar_System_Data/SolarSystem.csv', function(err, rows){
             chartType = 'scatter';
             mode = 'lines';
         }
-        
-        var trace = {
+
+        var data   = [{
             type: chartType,
             mode: mode,
             x: currentDataX,
             y: currentDataY
-        }
-
-        var data   = [trace],
+        }],
             layout = {
                 title: 'Solar System'
             }
+        
         Plotly.newPlot('plotdiv', data, layout);
     };
         
@@ -387,10 +384,18 @@ Plotly.d3.csv('data/Solar_System_Data/SolarSystem.csv', function(err, rows){
     
     updateData();
     function updateData(){
-        setPlot(xSelector.value, ySelector.value, chartSelector.value);
+        var Ys = document.getElementsByClassName('ySelector'),
+            datatypes = [];
+        
+        for (var i = 0; i < Ys.length; i++)
+        {
+            datatypes[i] = Ys[i].value;
+        }
+        
+        setPlot(xSelector.value, datatypes, chartSelector.value);
     }
 
     xSelector.addEventListener('change', updateData, false);
     ySelector.addEventListener('change', updateData, false);
     chartSelector.addEventListener('change', updateData, false);
-  });
+});

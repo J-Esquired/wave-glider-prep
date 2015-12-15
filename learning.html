@@ -1,21 +1,47 @@
 <html>
     <head>
+        <style>
+            body {
+                margin: 25;
+            }
+            
+            #chartType {
+                text-align: center;
+            }
+            
+            .plot {
+                width: 100%;
+                float: left;
+            }
+            
+            #xAxis {
+                float: right;
+                margin-right: 20%;
+            }
+            
+            #checkBoxes {
+                float: left;
+                margin-top: -20;
+            }
+        </style>
     </head>
     <body style="margin:0">
         <script type="text/javascript" src="scripts/three.min.js"></script>
         <script type="text/javascript" src="scripts/superSystem.js"></script>
 <!--
         <div class="bubbleplot" data-num="0">
+            <div id="chartType">
+                Chart Type: <select class="chartSelector"></select>
+            </div>
             <div class="plot" id="plotdiv"></div>
-            <div class="control-row">
-                X-Axis: <select class="xSelector">
-                </select>
-                Y-Axis: <select class="ySelector">
-                </select>
-                Chart Type: <select class="chartSelector">
-                </select>
+            <div id="xAxis">
+                X-Axis: <select class="xSelector"></select>
+                <br>
+                Y-Axis: <select class="ySelector" id="0"></select>
             </div>
             <div id="checkboxes">
+                <br>
+                Check Boxes:<br>
             </div>
         </div>
 -->

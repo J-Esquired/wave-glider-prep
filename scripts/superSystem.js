@@ -611,18 +611,9 @@ function scroll()
             [
                 {
                     innerRadius: 74658,
-                    outerRadius: 92000,
-                    color: 0
-                },
-                {
-                    innerRadius: 92000,
-                    outerRadius: 117580,
-                    color: 0
-                },
-                {
-                    innerRadius: 122170,
                     outerRadius: 136775,
-                    color: 0
+                    color: 'images/planets/saturnringcolor.jpg',
+                    pattern: 'images/planets/saturnringpattern.gif'
                 }
             ],
             moons:
@@ -803,14 +794,28 @@ function solarSystem(planets, scale)
     spotLight.distance = planets[planets.length - 1].SMA * 40;
     mouse.scroll = planets[focus.planet].radius * 10;
 }
-
+function convertDataURLToImageData(dataURL, callback) {
+    if (dataURL !== undefined && dataURL !== null) {
+        var canvas, context, image;
+        image = new Image();
+        image.addEventListener('load', function(){
+            canvas = document.createElement('canvas');
+            canvas.width = image.width;
+            canvas.height = image.height;
+            context = canvas.getContext('2d');
+            context.drawImage(image, 0, 0, canvas.width, canvas.height);
+            callback(context.getImageData(0, 0, canvas.width, canvas.height));
+        }, false);
+        image.src = dataURL;
+    }
+}
 function planet(planet, scale)
 {
-    planet.radius = planet.radius * scale;
-    planet.SMA = planet.SMA * scale / 50;
+    planet.radius *= scale;
+    planet.SMA *= scale / 50;
     
-    var particles = new THREE.DodecahedronGeometry(planet.radius, 3),
-        pMaterial = new THREE.MeshPhongMaterial({
+    var planetGeometry = new THREE.DodecahedronGeometry(planet.radius, 3),
+        planetMaterial = new THREE.MeshPhongMaterial({
             map: THREE.ImageUtils.loadTexture('images/planets/' + planet.texture),
             shading: THREE.SmoothShading,
             bumpMap: THREE.ImageUtils.loadTexture('images/planets/' + planet.bump),
@@ -820,21 +825,87 @@ function planet(planet, scale)
         });
 
     // create the particle system
-    var particleSystem = new THREE.Mesh(
-        particles,
-        pMaterial);
+    var planetMesh = new THREE.Mesh(
+        planetGeometry,
+        planetMaterial);
     
     // add it to the scene
-    //particleSystem.castShadow = true;
-    //particleSystem.receiveShadow = true;
-    scene.add(particleSystem);
+    //planetMesh.castShadow = true;
+    //planetMesh.receiveShadow = true;
+    scene.add(planetMesh);
+    var ringPoints;
+    // For Saturn Rings
+    if (planet.texture === 'saturnmap.jpg') {
+        var ring = planet.rings[0];
+        ring.innerRadius *= scale;
+        ring.outerRadius *= scale;
+    
+        var ringWidth = ring.outerRadius - ring.innerRadius;
+//        var ringColors = [0xffffee,0xccbb00,0xde467f,0xffbb66,0xde467f];
+//        var ringOpacities = [0.0,0.5,0.35,0.955,0.48];
+        var ringColors = [];
+        var ringOpacities = [];
+        var miniRingWidth;
+        
+        convertDataURLToImageData(
+            ring.color,
+            function(data){
+                var length = data.width;
+
+                for(var i=0; i<length*4; i+=4*5) {
+                    var red = data.data[i];
+                    var green = data.data[i+1];
+                    var blue = data.data[i+2];
+                    var alpha = data.data[i+3];
+                    ringColors.push(red*256*256 + green*256 + blue);
+                }
+                miniRingWidth = ringWidth/ringColors.length;
+                
+                convertDataURLToImageData(
+                    ring.pattern,
+                    function(data){
+                        var length = data.width;
+
+                        for(var i=0; i<length*4; i+=4*5) {
+                            var red = data.data[i];
+                            ringOpacities.push(red/256);
+                        }
+                        miniRingWidth = ringWidth/ringColors.length;
+
+                        var ringGeometry = new THREE.Geometry();
+                        for (var i = 0; i < ringColors.length; i ++) {
+                            var circumference = 2*Math.PI*(ring.innerRadius + i*miniRingWidth);
+                            var particleDensity = 60 * ringOpacities[i];
+                            for (var j = 0; j < circumference*particleDensity; j++) {
+                                var particleRadius = Math.random()*miniRingWidth + i*miniRingWidth + ring.innerRadius;
+                                var theta = (2*Math.PI*(j/(circumference*particleDensity)) + 2*Math.PI + Math.random()/10)%(2*Math.PI);
+                                var p1  = new THREE.Vector3(particleRadius*Math.cos(theta), (Math.random()*2 - 1)*200*scale, particleRadius*Math.sin(theta));
+                                ringGeometry.vertices.push(p1);
+                //                ringGeometry.colors[j].set(new THREE.Color("rgb(255,0,0)"));
+                                ringGeometry.colors.push(new THREE.Color(ringColors[i]));
+                            }
+                        }
+
+                        var material = new THREE.PointsMaterial({
+                            vertexColors: THREE.VertexColors,
+                            size: 1*scale
+                                                                });
+
+                        ringPoints = new THREE.Points( ringGeometry, material );
+                        ringPoints.receiveShadow = true;
+                        scene.add(ringPoints);
+                    }
+                ) 
+            }
+        )
+    }
 
     for (var j = 0; j < planet.moons.length; j++)
     {
         planet.moons[j].radius = planet.moons[j].radius * scale;
         planet.moons[j].SMA = planet.moons[j].SMA * scale;
 
-        var moonParticles = new THREE.DodecahedronGeometry(planet.moons[j].radius, 3),
+        var moonGeometry = new THREE.DodecahedronGeometry(planet.moons[j].radius, 3),
         moonMaterial = new THREE.MeshPhongMaterial({
             map: THREE.ImageUtils.loadTexture('images/planets/mad_moon.png'),
             shading: THREE.SmoothShading,
@@ -844,7 +915,7 @@ function planet(planet, scale)
             color: planet.moons[j].color
         });
 
-        var moonSystem = new THREE.Mesh(moonParticles, moonMaterial);
+        var moonSystem = new THREE.Mesh(moonGeometry, moonMaterial);
         
         // add it to the scene
         planet.moons[j].system = moonSystem;
@@ -856,12 +927,21 @@ function planet(planet, scale)
         planet.spherical.theta = angle/planet.orbitalTime;
         planet.spherical.phi = Math.PI/2 - Math.sin(planet.spherical.theta) * planet.inclination;
         
-        particleSystem.position.x = planet.cartesian.x = planet.SMA;//*Math.cos(planet.spherical.theta)*Math.sin(planet.spherical.phi);
-        particleSystem.position.z = planet.cartesian.y = planet.SMA*Math.sin(planet.spherical.theta)*Math.sin(planet.spherical.phi);
-        particleSystem.position.y = planet.cartesian.z = planet.SMA*Math.cos(planet.spherical.phi);
+        planetMesh.position.x = planet.cartesian.x = planet.SMA;//*Math.cos(planet.spherical.theta)*Math.sin(planet.spherical.phi);
+        planetMesh.position.z = planet.cartesian.y = planet.SMA*Math.sin(planet.spherical.theta)*Math.sin(planet.spherical.phi);
+        planetMesh.position.y = planet.cartesian.z = planet.SMA*Math.cos(planet.spherical.phi);
         
-        particleSystem.rotation.x = planet.axialTilt;
-        particleSystem.rotation.y = planet.spherical.theta + angle/planet.rotationTime;
+        if (planet.texture === 'saturnmap.jpg' && ringPoints) {
+            ringPoints.position.x = planet.cartesian.x = planet.SMA;//*Math.cos(planet.spherical.theta)*Math.sin(planet.spherical.phi);
+            ringPoints.position.z = planet.cartesian.y = planet.SMA*Math.sin(planet.spherical.theta)*Math.sin(planet.spherical.phi);
+            ringPoints.position.y = planet.cartesian.z = planet.SMA*Math.cos(planet.spherical.phi);
+        }
+        planetMesh.rotation.x = planet.axialTilt;
+        planetMesh.rotation.y = planet.spherical.theta + angle/planet.rotationTime;
+        if (planet.texture === 'saturnmap.jpg' && ringPoints) {
+            ringPoints.rotation.x = planet.axialTilt;
+            ringPoints .rotation.y = planet.spherical.theta + angle/planet.rotationTime;
+        }
         
         for (var i = 0; i < planet.moons.length; i++)
         {
