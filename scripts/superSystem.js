@@ -32,6 +32,7 @@ onRenderFcts.push(function(){
 //////////////////////////////////////////////////////////////////////////////////
 var focus = {planet: 0, moon: 0},
     mouse	= {x : 0, y : 0, scroll : 0},
+    freeCamPos = {x: 0, y: 0, z: 0, theta: 0, phi: 0, thetaOff: 0, phiOff: 0},
     listenerDiv = document.getElementById('cheats');
 
 if (listenerDiv === null)
@@ -39,105 +40,166 @@ if (listenerDiv === null)
     listenerDiv = document;
 }
 
+var freeCam = false;
+
  document.addEventListener('keydown', function(event){
-    if (event.keyCode === 68 || event.keyCode === 39)
-    {
-        focus.planet++;
-        focus.moon = 0;
-        if (focus.planet === planets.length)
-        {
-            focus.planet = 0;
-        }
-        scroll();
-    }
-    if (event.keyCode === 65 || event.keyCode === 37)
-    {
-        focus.planet--;
-        focus.moon = 0;
-        if (focus.planet === -1)
-        {
-            focus.planet = planets.length - 1;
-        }
-        scroll();
-    }
-    /*if (event.keyCode === 87 || event.keyCode === 38)
-    {
-        focus.moon++;
-        if (focus.moon === planets[focus.planet].moons.length + 1)
-        {
-            focus.moon = 0;
-        }
-        scroll();
-    }
-    if (event.keyCode === 83 || event.keyCode === 40)
-    {
-        focus.moon--;
-        if (focus.moon === -1)
-        {
-            focus.moon = planets[focus.planet].moons.length;
-        }
-        scroll();
-    }*/
     
+    if (event.keyCode === 32)
+    {
+        freeCam             = !freeCam;
+        freeCamPos.x        = cameras[0].position.x;
+        freeCamPos.y        = cameras[0].position.y;
+        freeCamPos.z        = cameras[0].position.z;
+        freeCamPos.thetaOff = cameras[0].rotation.x;
+        adfreeCamPos.phiOff   = cameras[0].rotation.z;
+        
+        console.log(freeCamPos);
+    }
+    else if (freeCam)
+    {
+        if (event.keyCode === 68 || event.keyCode === 39)
+        {
+            freeCamPos.x += 1;
+        }
+        else if (event.keyCode === 65 || event.keyCode === 37)
+        {
+            //left
+        }
+        else if (event.keyCode === 87 || event.keyCode === 38)
+        {
+            //fore
+        }
+        else if (event.keyCode === 83 || event.keyCode === 40)
+        {
+            //back
+        }
+    }
+    else
+    {
+        if (event.keyCode === 68 || event.keyCode === 39)
+        {
+            focus.planet++;
+            focus.moon = 0;
+            if (focus.planet === planets.length)
+            {
+                focus.planet = 0;
+            }
+            scroll();
+        }
+        else if (event.keyCode === 65 || event.keyCode === 37)
+        {
+            focus.planet--;
+            focus.moon = 0;
+            if (focus.planet === -1)
+            {
+                focus.planet = planets.length - 1;
+            }
+            scroll();
+        }
+        /*else if (event.keyCode === 87 || event.keyCode === 38)
+        {
+            focus.moon++;
+            if (focus.moon === planets[focus.planet].moons.length + 1)
+            {
+                focus.moon = 0;
+            }
+            scroll();
+        }
+        else if (event.keyCode === 83 || event.keyCode === 40)
+        {
+            focus.moon--;
+            if (focus.moon === -1)
+            {
+                focus.moon = planets[focus.planet].moons.length;
+            }
+            scroll();
+        }*/
+    }
 }, false);
 
 listenerDiv.addEventListener('mousemove', function(event){
+    if (freeCam)
+    {
+        freeCamPos.theta += (event.clientX / window.innerWidth - 0.5) > mouse.x ? .01 : -.01 ;
+        freeCamPos.phi += (event.clientY / window.innerHeight) - .5 + Math.PI > mouse.y ? .01 : -.01;
+    }
+    
     mouse.x	= (event.clientX / window.innerWidth ) - 0.5;
     mouse.y	= (event.clientY / window.innerHeight) - .5 + Math.PI;
 }, false);
 
 listenerDiv.addEventListener('mousewheel', function(event){
-    mouse.scroll += ((typeof event.wheelDelta != "undefined")?(-event.wheelDelta):event.detail)*(mouse.scroll/7000);
     
-    if (focus.moon === 0)
+    if (freeCam)
     {
-        if (mouse.scroll < planets[focus.planet].radius * 6)
-        {
-            mouse.scroll = planets[focus.planet].radius * 6;
-        }
-        else if (mouse.scroll > planets[focus.planet].radius * 50)
-        {
-            mouse.scroll = planets[focus.planet].radius * 50;
-        }
+        
     }
-    /*else if (focus.moon !== 0)
+    else
     {
-        if (mouse.scroll < 3)
+        mouse.scroll += ((typeof event.wheelDelta != "undefined")?(-event.wheelDelta):event.detail)*(mouse.scroll/7000);
+        
+        if (focus.moon === 0)
         {
-            mouse.scroll = 3;
+            if (mouse.scroll < planets[focus.planet].radius * 6)
+            {
+                mouse.scroll = planets[focus.planet].radius * 6;
+            }
+            else if (mouse.scroll > planets[focus.planet].radius * 50)
+            {
+                mouse.scroll = planets[focus.planet].radius * 50;
+            }
         }
-        else if (mouse.scroll > 20)
+        /*else if (focus.moon !== 0)
         {
-            mouse.scroll = 20;
-        }
-    }*/
+            if (mouse.scroll < 3)
+            {
+                mouse.scroll = 3;
+            }
+            else if (mouse.scroll > 20)
+            {
+                mouse.scroll = 20;
+            }
+        }*/
+    }
 }, false);
 
 onRenderFcts.push(function(delta, now){
     
-    var cameraAngle = Math.PI / 2,
-        phi = Math.PI/2 + mouse.y,
-        theta = (Math.PI * 2  * mouse.x);
-    
-    if (focus.moon === 0)
+    if (freeCam)
     {
-        theta += cameraAngle + planets[focus.planet].spherical.theta;
-        
-        cameras[0].position.x = planets[focus.planet].cartesian.x + mouse.scroll*Math.cos(theta)*Math.sin(phi);
-        cameras[0].position.z = planets[focus.planet].cartesian.y + mouse.scroll*Math.sin(theta)*Math.sin(phi);
-        cameras[0].position.y = planets[focus.planet].cartesian.z + mouse.scroll*Math.cos(phi);
-
-        cameras[0].lookAt( new THREE.Vector3(planets[focus.planet].cartesian.x, planets[focus.planet].cartesian.z, planets[focus.planet].cartesian.y) );
+        cameras[0].position.x = freeCamPos.x;
+        cameras[0].position.y = freeCamPos.y;
+        cameras[0].position.z = freeCamPos.z;
+        cameras[0].rotation.y = freeCamPos.theta;// + freeCamPos.thetaOff;
+        cameras[0].rotation.x = (freeCamPos.phi   + freeCamPos.phiOff) * Math.sin(freeCamPos.theta);
+        cameras[0].rotation.z = (freeCamPos.phi   + freeCamPos.phiOff) * Math.cos(freeCamPos.theta);
     }
     else
-    {   
-        theta += cameraAngle + Math.atan2(planets[focus.planet].moons[focus.moon - 1].cartesian.y, planets[focus.planet].moons[focus.moon - 1].cartesian.x);
-        
-        cameras[0].position.x = planets[focus.planet].moons[focus.moon - 1].cartesian.x + mouse.scroll*Math.cos(theta)*Math.sin(phi);
-        cameras[0].position.z = planets[focus.planet].moons[focus.moon - 1].cartesian.y + mouse.scroll*Math.sin(theta)*Math.sin(phi);
-        cameras[0].position.y = planets[focus.planet].moons[focus.moon - 1].cartesian.z + mouse.scroll*Math.cos(phi);
+    {
+        var cameraAngle = Math.PI / 2,
+            phi = Math.PI/2 + mouse.y,
+            theta = (Math.PI * 2  * mouse.x);
 
-        cameras[0].lookAt( new THREE.Vector3(planets[focus.planet].moons[focus.moon - 1].cartesian.x, planets[focus.planet].moons[focus.moon - 1].cartesian.z, planets[focus.planet].moons[focus.moon - 1].cartesian.y) );
+        if (focus.moon === 0)
+        {
+            theta += cameraAngle + planets[focus.planet].spherical.theta;
+
+            cameras[0].position.x = planets[focus.planet].cartesian.x + mouse.scroll*Math.cos(theta)*Math.sin(phi);
+            cameras[0].position.z = planets[focus.planet].cartesian.y + mouse.scroll*Math.sin(theta)*Math.sin(phi);
+            cameras[0].position.y = planets[focus.planet].cartesian.z + mouse.scroll*Math.cos(phi);
+
+            cameras[0].lookAt( new THREE.Vector3(planets[focus.planet].cartesian.x, planets[focus.planet].cartesian.z, planets[focus.planet].cartesian.y) );
+        }
+        else
+        {   
+            theta += cameraAngle + Math.atan2(planets[focus.planet].moons[focus.moon - 1].cartesian.y, planets[focus.planet].moons[focus.moon - 1].cartesian.x);
+
+            cameras[0].position.x = planets[focus.planet].moons[focus.moon - 1].cartesian.x + mouse.scroll*Math.cos(theta)*Math.sin(phi);
+            cameras[0].position.z = planets[focus.planet].moons[focus.moon - 1].cartesian.y + mouse.scroll*Math.sin(theta)*Math.sin(phi);
+            cameras[0].position.y = planets[focus.planet].moons[focus.moon - 1].cartesian.z + mouse.scroll*Math.cos(phi);
+
+            cameras[0].lookAt( new THREE.Vector3(planets[focus.planet].moons[focus.moon - 1].cartesian.x, planets[focus.planet].moons[focus.moon - 1].cartesian.z, planets[focus.planet].moons[focus.moon - 1].cartesian.y) );
+        } 
     }
 })
 
