@@ -32,7 +32,7 @@ onRenderFcts.push(function(){
 //////////////////////////////////////////////////////////////////////////////////
 var focus = {planet: 0, moon: 0},
     mouse	= {x : 0, y : 0, scroll : 0},
-    freeCamPos = {x: 0, y: 0, z: 0, theta: 0, phi: 0, thetaOff: 0, phiOff: 0},
+    freeCamPos = {x: 0, y: 0, z: 0, theta: 0, phi: 0, phiOff: 0},
     listenerDiv = document.getElementById('cheats');
 
 if (listenerDiv === null)
@@ -50,10 +50,6 @@ var freeCam = false;
         freeCamPos.x        = cameras[0].position.x;
         freeCamPos.y        = cameras[0].position.y;
         freeCamPos.z        = cameras[0].position.z;
-        freeCamPos.thetaOff = cameras[0].rotation.x;
-        adfreeCamPos.phiOff   = cameras[0].rotation.z;
-        
-        console.log(freeCamPos);
     }
     else if (freeCam)
     {
@@ -120,8 +116,8 @@ var freeCam = false;
 listenerDiv.addEventListener('mousemove', function(event){
     if (freeCam)
     {
-        freeCamPos.theta += (event.clientX / window.innerWidth - 0.5) > mouse.x ? .01 : -.01 ;
-        freeCamPos.phi += (event.clientY / window.innerHeight) - .5 + Math.PI > mouse.y ? .01 : -.01;
+        freeCamPos.theta = (event.clientX / window.innerWidth ) * 2 * Math.PI;
+        freeCamPos.phi   = (event.clientY / window.innerHeight) * Math.PI;
     }
     
     mouse.x	= (event.clientX / window.innerWidth ) - 0.5;
@@ -170,9 +166,13 @@ onRenderFcts.push(function(delta, now){
         cameras[0].position.x = freeCamPos.x;
         cameras[0].position.y = freeCamPos.y;
         cameras[0].position.z = freeCamPos.z;
-        cameras[0].rotation.y = freeCamPos.theta;// + freeCamPos.thetaOff;
-        cameras[0].rotation.x = (freeCamPos.phi   + freeCamPos.phiOff) * Math.sin(freeCamPos.theta);
-        cameras[0].rotation.z = (freeCamPos.phi   + freeCamPos.phiOff) * Math.cos(freeCamPos.theta);
+        cameras[0].rotation.x = freeCamPos.theta;
+        
+        cameras[0].rotateOnAxis(new THREE.Vector3(0, Math.sin(freeCamPos.theta), Math.sin(freeCamPos.theta)), freeCamPos.phi - freeCamPos.phiOff);
+        freeCamPos.phiOff = freeCamPos.phi;
+        
+        console.log(cameras[0].position);
+        console.log(cameras[0].rotation);
     }
     else
     {
