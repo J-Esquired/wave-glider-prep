@@ -72,33 +72,6 @@ Plotly.newPlot('myDiv', data, layout);
 /////////////////////////////////////////////////////////////////////////////
 /*
 //                    CONTOUR PLOT, IS QUITE SLOW
-var arrayX = [0],
-    arrayY = [0],
-    arrayZ = [0];
-
-for (var i = 0; i < 100; i++)
-{
-    arrayX[i] = Math.random() * 2000 - 1000;
-    arrayY[i] = Math.random() * 2000 - 1000;
-    arrayZ[i] = Math.cos(arrayX[i]/500) * Math.sin(arrayY[i]/500);
-};
-
-var data = [{
-    x: arrayX,
-    y: arrayY,
-    z: arrayZ,
-    mode: 'markers',
-    marker: {
-        size: 12,
-        opacity: 0.1
-    },
-    type: 'contour'
-}];
-
-var layout = {
-  title: 'Mt Bruno Elevation',
-};
-Plotly.newPlot('myDiv', data, layout);
 
 */
 /////////////////////////////////////////////////////////////////////////////
@@ -308,35 +281,98 @@ Plotly.d3.csv('data/Solar_System_Data/SolarSystem.csv', function(err, rows){
     
     function setPlot(dataX, dataY, chartType) {
         
-        var mode = 'markers';
-        
-        currentDataX = getData(dataX);
-        currentDataY = getData(dataY);
-        
-        if (!(dataX === 'Name'))
+        if (chartType === 'surface')
         {
-            var tempData = sortData(currentDataX, currentDataY);
-            currentDataX = tempData[0];
-            currentDataY = tempData[1];
-        }
-        
-        if (chartType === 'line')
-        {
-            chartType = 'scatter';
-            mode = 'lines';
-        }
+            var arrayX = [0],
+                arrayY = [0],
+                arrayZ = [0];
 
-        var data   = [{
-            type: chartType,
-            mode: mode,
-            x: currentDataX,
-            y: currentDataY
-        }],
-            layout = {
-                title: 'Solar System'
-            }
+            for (var i = 0; i < 10000; i++)
+            {
+                arrayX[i] = Math.random() * 2000 - 1000;
+                arrayY[i] = Math.random() * 2000 - 1000;
+                arrayZ[i] = Math.cos(arrayX[i]/500) * Math.sin(arrayY[i]/500);
+            };
+
+            var data = [{
+                x: arrayX,
+                y: arrayY,
+                z: arrayZ,
+                mode: 'markers',
+                marker: {
+                    size: 12,
+                    opacity: 0.1
+                },
+                type: 'scatter3d'
+            }];
+
+            var layout = {
+              title: 'Mt Bruno Elevation',
+            };
+            Plotly.newPlot('plotdiv', data, layout);
+        }
+        else if (chartType === 'contour')
+        {
+            var arrayX = [0],
+                arrayY = [0],
+                arrayZ = [0];
+
+            for (var i = 0; i < 100; i++)
+            {
+                arrayX[i] = Math.random() * 2000 - 1000;
+                arrayY[i] = Math.random() * 2000 - 1000;
+                arrayZ[i] = Math.cos(arrayX[i]/500) * Math.sin(arrayY[i]/500);
+            };
+
+            var data = [{
+                x: arrayX,
+                y: arrayY,
+                z: arrayZ,
+                mode: 'markers',
+                marker: {
+                    size: 12,
+                    opacity: 0.1
+                },
+                type: 'contour'
+            }];
+
+            var layout = {
+              title: 'Mt Bruno Elevation',
+            };
+            Plotly.newPlot('plotdiv', data, layout);
+        }
+        else
+        {
+            var mode = 'markers';
         
-        Plotly.newPlot('plotdiv', data, layout);
+            currentDataX = getData(dataX);
+            currentDataY = getData(dataY);
+
+            if (!(dataX === 'Name'))
+            {
+                var tempData = sortData(currentDataX, currentDataY);
+                currentDataX = tempData[0];
+                currentDataY = tempData[1];
+            }
+
+            if (chartType === 'line')
+            {
+                chartType = 'scatter';
+                mode = 'lines';
+            }
+
+            var data   = [{
+                type: chartType,
+                mode: mode,
+                x: currentDataX,
+                y: currentDataY
+            }],
+                layout = {
+                    title: 'Solar System'
+                }
+
+            Plotly.newPlot('plotdiv', data, layout);
+        }
     };
         
     var innerContainer = document.querySelector('[data-num="0"'),
@@ -378,7 +414,7 @@ Plotly.d3.csv('data/Solar_System_Data/SolarSystem.csv', function(err, rows){
     
     assignOptions(['Diameter (km)', 'Mean Distance from Sun (AU)', 'Orbital Period (years)', 'Orbital Eccentricity', 'Mean Orbital Velocity (km/sec)', 'Rotation Period (days)', 'Inclination of Axis (degrees)', 'Mean Temperature at Surface (C)', 'Gravity at Equator (Earth=1)', 'Escape Velocity (km/sec)', 'Mean Density (water=1)', 'Number of Moons'], ySelector, false);
     
-    assignOptions(['scatter', 'line'], chartSelector, false);
+    assignOptions(['scatter', 'line', 'surface', 'contour'], chartSelector, false);
     
     assignOptions(['Line of Best Fit'], specials, true);
     
