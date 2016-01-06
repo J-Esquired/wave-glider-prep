@@ -1,40 +1,16 @@
-<html>
+<!DOCTYPE html>
+<html lang="en" ng-app="APP">
+<head>
+    <meta charset="UTF-8">
+    <title>angular file upload</title>
+</head>
+
 <body>
-    <form method="post" action="http://localhost:3000">
-        Name: <input type="file" name="name" id="pic" />
-        <input type="submit" value="Submit" />
+    <form method='post' action='http://localhost:3030/upload' enctype="multipart/form-data">
+        Upload Image:
+        <input type='file' name='fileUploaded'>
+        <input type='submit'>
     </form>
-
-    <script type="text/JavaScript">
-        console.log('begin');
-        var http = new XMLHttpRequest();
-        var params = new FormData();
-        
-        formData.append("Filedata", document.getElementById("pic").files[0].);
-        
-        http.open("POST", "http://localhost:3000", true);
-
-        http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-        //http.setRequestHeader("Content-length", params.length);
-        //http.setRequestHeader("Connection", "close");
-
-        http.onreadystatechange = function() {
-            console.log('onreadystatechange');
-            if (http.readyState == 4 && http.status == 200)
-            {
-                alert(http.responseText);
-            }
-            else
-            {
-                console.log('readyState=' + http.readyState + ', status: ' + http.status);
-            }
-        }
-
-        console.log('sending...')
-        http.send(params);
-        console.log('end');
-
-    </script>
-
+    <img src="uploads/LogosDesignWave.png">
 </body>
 </html>
