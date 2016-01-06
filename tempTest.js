@@ -5,7 +5,7 @@ var fs = require('fs-extra');       //File System - for file manipulation
 
 var app = express();
 app.use(busboy());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(__dirname));
 
 /* ========================================================== 
 Create a Route (/upload) to handle the Form submission 
@@ -41,13 +41,7 @@ function getHTML(path)
         var index = path.indexOf(' ');
         path = path.substring(0, index) + '%20' + path.substring(index + 1, path.length);
     }
-    var html = '<head></head><body><img src="';
-    var relPath = path.substring(path.indexOf('uploads/'), path.length);
-    
-    html += relPath;
-    html += '">';
-    html += relPath;
-    html += '</body>';
+    var html = '<html lang="en" ng-app="APP"><head><meta charset="UTF-8"><title>angular file upload</title></head><body><form method="post" action="http://localhost:3030/upload" enctype="multipart/form-data">Upload Image:<input type="file" name="fileUploaded"><input type="submit"></form><img src="' + path.substring(path.indexOf('uploads')) + '"></body></html>';
     
     return html;
 }
