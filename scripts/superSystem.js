@@ -907,9 +907,9 @@ function planet(planet, scale)
 
         var moonGeometry = new THREE.DodecahedronGeometry(planet.moons[j].radius, 3),
         moonMaterial = new THREE.MeshPhongMaterial({
-            map: THREE.ImageUtils.loadTexture('images/planets/mad_moon.png'),
+            map: THREE.ImageUtils.loadTexture('images/planets/mad_moon.jpg'),
             shading: THREE.SmoothShading,
-            bumpMap: THREE.ImageUtils.loadTexture('images/planets/mad_moon_bump.png'),
+            bumpMap: THREE.ImageUtils.loadTexture('images/planets/mad_moon_bump.jpg'),
             bumpScale: .1,
             specularMap: THREE.ImageUtils.loadTexture('images/planets/genericSpecularMap.jpg'),
             color: planet.moons[j].color
