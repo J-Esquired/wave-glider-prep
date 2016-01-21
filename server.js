@@ -1,6 +1,7 @@
 var express = require('express');
 var app = express(), api = express();
-var port = 8080, apiPort = 8081;
+var port = process.env.PORT || 8080, apiPort = 8081;
+if (port === apiPort) apiPort = 8080;
 require('./router/main')(app);
 require('./router/api')(api);
 app.set('views',__dirname + '/views');
@@ -15,7 +16,7 @@ app.engine('.jade', require('jade').__express);
 app.use(function (req, res) {
 
     // Website you wish to allow to connect
-    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8081');
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:' + apiPort);
 
     // Request methods you wish to allow
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
@@ -35,7 +36,7 @@ app.use(function (req, res) {
 api.use(function (req, res) {
 
     // Website you wish to allow to connect
-    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8080');
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:' + port);
 
     // Request methods you wish to allow
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
